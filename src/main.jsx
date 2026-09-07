@@ -8,6 +8,8 @@ import './styles.css';
 import './motion.css';
 import './glass.css';
 import './mobile.css';
+import './navigation.css';
+import './adaptive-header.css';
 
 const contactLink = (interest = '') => `#/contact${interest ? `?interest=${encodeURIComponent(interest)}` : ''}`;
 function Button({ children = 'Build my career blueprint', href = contactLink(), light = false, ...props }) { return <a className={`button ${light ? 'button-light' : ''}`} href={href} {...props}><span>{children}</span><ArrowUpRight size={22} /></a>; }
@@ -89,6 +91,7 @@ function Contact({ interest }) {
 function Footer() { return <footer><div className="footer-top"><a href="#/home" className="footer-brand"><img src="/cred-logo.svg" alt="CRED Global Learning" /></a><p>Academic qualifications, professional certifications and practical skills. Connected to your career goals.</p><a className="footer-top-link" href="#top" onClick={e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>BACK TO TOP <ArrowUpRight size={19} /></a></div><div className="footer-links">{navigation.map(([id, label]) => <a key={id} href={`#/${id}`}>{label}</a>)}</div><div className="footer-bottom"><span>© {new Date().getFullYear()} CRED Global Learning</span><span>QUALIFICATIONS WITH A CAREER PURPOSE.</span><span>AJMAN, UNITED ARAB EMIRATES <Globe2 size={13} /></span></div></footer>; }
 const wipeDirections = ['left', 'right', 'up', 'down'];
 function App() {
+ const [headerTheme, setHeaderTheme] = useState('dark');
  const [transitionDirection, setTransitionDirection] = useState(() => wipeDirections[Math.floor(Math.random() * wipeDirections.length)]);
  const [hash, setHash] = useState(location.hash); const [menuOpen, setMenuOpen] = useState(false); const menuButton = useRef(null); const menuPanel = useRef(null); const current = hash.replace(/^#\/?/, '').split('?')[0] || 'home'; const page = navigation.some(([id]) => id === current) ? current : 'home'; const interest = new URLSearchParams(hash.split('?')[1] || '').get('interest') || '';
  useEffect(() => { const listener = () => {
@@ -99,26 +102,33 @@ function App() {
    });
  }; window.addEventListener('hashchange', listener); return () => window.removeEventListener('hashchange', listener); }, []);
  useEffect(() => { setMenuOpen(false); document.title = titles[page]; window.scrollTo(0, 0); }, [hash, page]);
+
  useEffect(() => {
    let frame;
    const update = () => {
-     const rail = document.querySelector('.glass-rail');
-     const probeX = rail.getBoundingClientRect().right + 4;
-     const element = document.elementFromPoint(probeX, innerHeight * .45);
-     let section = element?.closest('section, footer');
+     const header = document.querySelector('.top-header');
+     if (!header || !header.getBoundingClientRect().height) return;
+     const y = header.getBoundingClientRect().height / 2;
+     const sections = [...document.querySelectorAll('main section, footer')];
+     let surface = sections.find(section => { const r = section.getBoundingClientRect(); return r.top <= y && r.bottom > y; });
      let light = false;
-     if (section) {
-       const rgb = getComputedStyle(section).backgroundColor.match(/[\d.]+/g)?.map(Number);
-       light = rgb && (rgb.length < 4 || rgb[3] > 0) ? (rgb[0] * .2126 + rgb[1] * .7152 + rgb[2] * .0722 > 150) : true;
+     while (surface) {
+       const rgb = getComputedStyle(surface).backgroundColor.match(/[\d.]+/g)?.map(Number);
+       if (rgb && (rgb.length < 4 || rgb[3] > .5)) { light = rgb[0] * .2126 + rgb[1] * .7152 + rgb[2] * .0722 > 150; break; }
+       surface = surface.parentElement;
      }
-     rail.dataset.theme = light && !menuOpen ? 'light' : 'dark';
-     const travel = document.documentElement.scrollHeight - innerHeight;
-     rail.style.setProperty('--page-progress', travel > 0 ? Math.min(1, scrollY / travel) : 0);
+     setHeaderTheme(light ? 'light' : 'dark');
    };
    const schedule = () => { cancelAnimationFrame(frame); frame = requestAnimationFrame(update); };
-   schedule(); window.addEventListener('scroll', schedule, { passive: true }); window.addEventListener('resize', schedule);
-   return () => { cancelAnimationFrame(frame); window.removeEventListener('scroll', schedule); window.removeEventListener('resize', schedule); };
- }, [hash, menuOpen]);
+   schedule(); addEventListener('scroll', schedule, { passive: true }); addEventListener('resize', schedule);
+   return () => { cancelAnimationFrame(frame); removeEventListener('scroll', schedule); removeEventListener('resize', schedule); };
+ }, [hash]);
+ useEffect(() => {
+   const desktop = window.matchMedia('(min-width: 901px)');
+   const closeOnDesktop = () => { if (desktop.matches) setMenuOpen(false); };
+   desktop.addEventListener('change', closeOnDesktop);
+   return () => desktop.removeEventListener('change', closeOnDesktop);
+ }, []);
 
  useEffect(() => {
    const textNodes = [...document.querySelectorAll('main h2, main h3, main p, main .eyebrow')].filter(node => !node.closest('.reveal, dialog, form, .statement-section'));
@@ -127,12 +137,11 @@ function App() {
  }, [hash, page]);
  useEffect(() => { if (!menuOpen) return; document.body.style.overflow = 'hidden'; const focusable = () => [menuButton.current, ...menuPanel.current.querySelectorAll('a')]; focusable()[1]?.focus(); const escape = e => { if (e.key === 'Escape') { setMenuOpen(false); menuButton.current?.focus(); } if (e.key === 'Tab') { const nodes = focusable(); if (e.shiftKey && document.activeElement === nodes[0]) { e.preventDefault(); nodes.at(-1).focus(); } else if (!e.shiftKey && document.activeElement === nodes.at(-1)) { e.preventDefault(); nodes[0].focus(); } } }; window.addEventListener('keydown', escape); return () => { document.body.style.overflow = ''; window.removeEventListener('keydown', escape); }; }, [menuOpen]);
  return <><a className="skip-link" href="#main-content" onClick={e => { e.preventDefault(); document.getElementById('main-content').focus(); }}>Skip to content</a>
- <aside className="side-rail glass-rail" aria-label="Site navigation" data-menu-open={menuOpen}>
-   <a href="#/home" aria-label="CRED home" className="rail-mark"><img src="/cred-emblem.svg" alt="" /></a>
-   <nav className="rail-navigation" aria-label="Main navigation">{navigation.map(([id, label]) => <a key={id} href={`#/${id}`} aria-current={page === id ? 'page' : undefined}><span>{label}</span><span className="nav-dot" /></a>)}</nav>
-   <div className="rail-lower"><a className="rail-consult" href="#/contact"><ArrowUpRight size={22} /><span>Let’s talk</span></a><span className="rail-location"><Globe2 size={15} /><span>UAE / GLOBAL</span></span></div>
-   <span className="rail-progress" aria-hidden="true" />
- </aside>
+ <header className="top-header" data-theme={headerTheme}>
+   <a className="top-brand" href="#/home" aria-label="CRED Global Learning home" onClick={() => setMenuOpen(false)}><img src="/cred-logo.svg" alt="CRED Global Learning" /></a>
+   <nav className="top-navigation" aria-label="Main navigation">{navigation.map(([id, label]) => <a key={id} href={`#/${id}`} aria-current={page === id ? 'page' : undefined}>{label}</a>)}</nav>
+
+ </header>
  <div className="mobile-dock" aria-label="Mobile quick actions">
    <a href="#/programmes" onClick={() => setMenuOpen(false)} aria-current={page === 'programmes' ? 'page' : undefined}><Globe2 size={20} /><span>Explore</span></a>
    <button ref={menuButton} className="dock-menu" aria-label={menuOpen ? 'Close navigation' : 'Open navigation'} aria-expanded={menuOpen} aria-controls="mobile-navigation" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X size={22} /> : <Menu size={22} />}<span>{menuOpen ? 'Close' : 'Menu'}</span></button>

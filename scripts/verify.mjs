@@ -26,7 +26,7 @@ try {
   await page.getByRole('button', { name: 'Pause header video' }).click();
   assert(await page.locator('video').evaluate(v => v.paused));
   await page.getByRole('button', { name: 'Play header video' }).click();
-  await page.locator('#intro').evaluate(el => window.scrollTo({ top: el.offsetTop, behavior: 'instant' }));
+  await page.locator('#intro').evaluate(el => window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY, behavior: 'instant' }));
   await page.waitForTimeout(900);
   assert(await page.locator('video').evaluate(v => v.paused));
   results.push('Video pause/play controls and automatic offscreen pause pass');
