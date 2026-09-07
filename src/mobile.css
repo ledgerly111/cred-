@@ -1,0 +1,74 @@
+/* Complete brand signature above the page, without a desktop navigation bar. */
+main { position: relative; }
+.page-wordmark { position: absolute; top: 24px; left: calc(var(--rail-width) + var(--page-gutter)); width: 185px; z-index: 4; }
+.page-wordmark img { width: 100%; filter: brightness(0) invert(1); }
+.hero-content { padding-top: 120px; }
+.hero h1 { margin-top: clamp(35px, 5vh, 70px); }
+.page-banner { padding-top: 135px; }
+.mobile-dock { display: none; }
+.route-wipe[data-direction="right"] { transform-origin: right; animation-name: uncover-horizontal; }
+.route-wipe[data-direction="left"] { transform-origin: left; animation-name: uncover-horizontal; }
+.route-wipe[data-direction="up"] { transform-origin: top; animation-name: uncover-vertical; }
+.route-wipe[data-direction="down"] { transform-origin: bottom; animation-name: uncover-vertical; }
+@keyframes uncover-horizontal { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+@keyframes uncover-vertical { from { transform: scaleY(1); } to { transform: scaleY(0); } }
+
+/* Phone and tablet navigation is designed around thumb reach and full-width content. */
+@media(max-width:900px) {
+  :root { --rail-width: 0px; --page-gutter: 28px; }
+  .glass-rail { display: none; }
+  .page-wordmark { width: 168px; top: 22px; }
+  .mobile-dock { position: fixed; z-index: 70; bottom: 12px; left: max(16px, env(safe-area-inset-left)); right: max(16px, env(safe-area-inset-right)); margin: auto; max-width: 480px; display: grid; grid-template-columns: repeat(3,1fr); padding: 8px 8px calc(8px + env(safe-area-inset-bottom)); background: #37121eef; color: var(--paper); border: 1px solid #ffffff30; border-radius: 20px; backdrop-filter: blur(22px); box-shadow: 0 8px 32px #20091035; }
+  .mobile-dock > a, .mobile-dock > button { display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 5px; background: transparent; color: inherit; min-height: 48px; border-radius: 12px; font-size: 10px; padding: 5px; }
+  .mobile-dock .dock-menu { background: var(--coral); color: var(--wine); }
+  .mobile-dock > a[aria-current] { color: var(--coral); }
+  .mobile-dock > a:hover { background: #ffffff0b; }
+  .mobile-nav { inset: 0; padding: 45px max(28px, calc((100vw - 560px)/2)) 115px; background: #37121efa; }
+  .mobile-nav > a { font-size: 32px; padding: 17px 0; min-height: 62px; }
+  .mobile-nav > p { margin-top: 26px; }
+  .hero { min-height: 780px; }
+  .hero-content { padding-top: 126px; padding-bottom: 122px; }
+  .hero h1 { font-size: clamp(52px, 8.5vw, 80px); margin-top: 38px; }
+  .hero-bottom { padding-top: 24px; }
+  .video-control { bottom: 95px; }
+  footer { padding-bottom: 120px; }
+  .route-wipe { inset: 0; animation-duration: .48s; }
+  .page-banner { padding-top: 130px; }
+  .skip-link { left: 16px; }
+  .filter-bar { gap: 8px; }
+  .filter-bar button { min-height: 44px; }
+  .subject-list button { min-height: 44px; }
+}
+@media(max-width:640px) {
+  :root { --page-gutter: 23px; }
+  .hero { height: 100svh; min-height: 790px; }
+  .hero-content { padding-top: 121px; }
+  .hero-topline .eyebrow { font-size: 8px; }
+  .hero h1 { font-size: clamp(45px, 12vw, 68px); line-height: 1.06; margin-top: 35px; }
+  .hero-bottom p { font-size: 13px; max-width: 340px; }
+  .hero-bottom .button { width: 100%; font-size: 11px; min-height: 54px; padding-left: 18px; }
+  .hero-bottom .button > svg { width: 54px; height: 54px; padding: 16px; }
+  .page-banner h1 { font-size: clamp(43px, 11.5vw, 64px); }
+  .page-banner { min-height: 470px; }
+  h2 { font-size: 38px; }
+  .intro-copy h2 { font-size: 38px; }
+  .section { padding-top: 64px; padding-bottom: 64px; }
+  .closing-cta h2 { font-size: 42px; }
+  .scroll-statement { font-size: 36px; }
+  .statement-section { min-height: 80vh; padding-top: 75px; padding-bottom: 75px; }
+  .button { font-size: 11px; min-height: 54px; }
+  .text-link { min-height: 44px; align-items: center; }
+  .consultation-form { padding: 27px 20px; }
+  .submit-button { font-size: 10px; padding-left: 12px; }
+  .submit-button > svg { width: 42px; padding: 12px; }
+  .accordion-item > button { min-height: 64px; }
+  .mobile-nav > a { font-size: 29px; }
+  .article-modal { max-height: calc(100svh - 140px); margin-top: 35px; }
+}
+@media(max-width:360px) {
+  .hero h1 { font-size: 42px; }
+  .mobile-nav { padding-top: 25px; }
+  .mobile-nav > a { font-size: 26px; padding: 13px 0; min-height: 55px; }
+  .submit-button { font-size: 9px; }
+}
+@media(prefers-reduced-motion:reduce) { .route-wipe { display: none; } }
