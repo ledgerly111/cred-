@@ -1,0 +1,43 @@
+/* Quiet orbital movement around a steady, readable destination. */
+.blueprint-art .orbit {
+  pointer-events: none;
+  animation: blueprint-orbit 30s linear infinite;
+  animation-play-state: paused;
+  --orbit-start: -20deg;
+}
+.blueprint-art .orbit-two {
+  animation-duration: 42s;
+  animation-direction: reverse;
+}
+.blueprint-art .orbit-three {
+  --orbit-start: -40deg;
+  animation-duration: 36s;
+}
+.blueprint-art.is-visible .orbit { animation-play-state: running; }
+.blueprint-art .orbit::after {
+  content: '';
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--coral);
+  box-shadow: 0 0 0 5px #fa785710, 0 0 14px #fa785745;
+}
+.blueprint-art .orbit-two::after {
+  width: 5px;
+  height: 5px;
+  background: var(--paper);
+  box-shadow: 0 0 0 4px #f5eeeb0a;
+}
+.blueprint-art .orbit-three::after { width: 9px; height: 9px; }
+.blueprint-art .orbit-label { z-index: 2; }
+@keyframes blueprint-orbit {
+  from { transform: rotate(var(--orbit-start)); }
+  to { transform: rotate(calc(var(--orbit-start) + 360deg)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .blueprint-art .orbit { animation: none; }
+}
