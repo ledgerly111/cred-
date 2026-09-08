@@ -1,4 +1,4 @@
-export const navigation = [['home', 'Home'], ['about', 'About us'], ['services', 'Our services'], ['programmes', 'Programmes'], ['scholarships', 'Scholarships'], ['blog', 'Learning hub'], ['contact', 'Contact us']];
+export const navigation = [['home', 'Home'], ['about', 'About us'], ['services', 'Services'], ['programmes', 'Programmes'], ['scholarships', 'Scholarships'], ['blog', 'Blogs'], ['contact', 'Contact us']];
 export const titles = { home: 'Career-Focused Education Consultancy in UAE | CRED Global', about: 'About CRED Global | Education with Career Direction', services: 'Education and Career Advisory Services | CRED Global', programmes: 'Degrees, Diplomas and Professional Programmes | CRED', scholarships: 'Scholarship and Fee-Support Guidance | CRED Global', blog: 'Education and Career Guidance Blog | CRED Global', contact: 'Contact CRED Global | Book a Consultation' };
 export const audiences = [
   ['School leavers & graduates', 'Explore the right subject, qualification level and progression route before making a major commitment.'],

@@ -13,9 +13,9 @@ Open the local URL printed by Vite. `npm run build` creates the production site 
 
 ## Included
 
-- Home, About, Services, Programmes, Scholarships, Learning Hub and Contact.
-- Supplied video, muted inline autoplay, looping, a play/pause control, and automatic pause when it leaves the viewport. It scrolls away normally. Mobile uses a closer, centred portrait crop.
-- Responsive navigation, scroll reveals, staggered cards, interactive accordions, programme category filters, selectable subjects and accessible guide dialogs.
+- Home, About, Services, Programmes, Scholarships, Blogs and Contact.
+- Supplied video, muted inline autoplay, looping, continuous playback without visible video controls. It scrolls away normally. Mobile uses a closer, centred portrait crop.
+- Responsive navigation, scroll reveals, staggered cards, interactive accordions, programme category filters, selectable subjects and linked article pages.
 - Reduced-motion support, keyboard navigation, labelled controls and form validation.
 - Programme, subject and scholarship enquiries prefill the contact form.
 - The supplied SVG is retained unchanged as `public/cred-logo-original.svg`; `public/cred-logo.svg` crops only its outer blank canvas for use in the header. CSS displays it in white on dark backgrounds.
@@ -36,20 +36,20 @@ The source document contains no embedded images or explicit image-slot count. Th
 | 8 | Professional qualifications |
 | 9 | Short courses and skills development |
 | 10 | Scholarships — education access |
-| 11 | Learning Hub — education decisions |
-| 12 | Learning Hub — career progression |
-| 13 | Learning Hub — scholarship guidance |
+| 11 | Blogs — education decisions |
+| 12 | Blogs — career progression |
+| 13 | Blogs — scholarship guidance |
 
 The shared `Placeholder` component in `src/main.jsx` controls the numbered image areas. Supply the corresponding images to replace each slot. No stock photos or generated images were substituted.
 
 ## Content and launch handoff
 
-Content is adapted from `CRED_Global_Learning_Website_Content (1).docx`. Editorial headings are styled for the reference layout. The three Learning Hub quick guides are condensed from the document's existing advisory content; the document did not contain complete blog articles.
+Content is adapted from `CRED_Global_Learning_Website_Content (1).docx`. Editorial headings are styled for the reference layout. The three Blogs quick guides are condensed from the document's existing advisory content; the document did not contain complete blog articles.
 
 Items intentionally awaiting confirmed business information:
 
-- Contact phone, official email, full address and office hours. The supplied city and country are shown.
-- A form endpoint or CRM/email integration. The current form validates fields and downloads a plain-text enquiry. It **does not send enquiries**, does not persist personal information in browser storage and does not claim successful delivery. Replace `Contact.submit` with an actual delivery integration before accepting online enquiries.
+- Official email, full address and office hours. The supplied city and country are shown. The client-provided telephone and WhatsApp number is +94 77 059 7811.
+- Optional CRM/email integration. The consultation form validates fields and opens WhatsApp with the enquiry prefilled for +94 77 059 7811. The student reviews the message and presses Send; the website does not claim delivery or store personal information. A fallback link lets the student reopen WhatsApp.
 - Verified impact figures. The document supplied `350+`, `125+`, `50+`, `12+` and `60%` on Home but used `[XX]` elsewhere and explicitly called for verification. Numerical claims have been held out until confirmed.
 - Corporate scholarship terms: the document mentions a 25% discount but provides no eligibility or partner details. The site invites confirmation with an advisor instead of advertising an unverified fixed discount.
 - Approved Privacy Policy and Terms content, newsletter delivery, and verified social account URLs. No fabricated legal policies, subscription confirmations or dead social links are included.
@@ -58,6 +58,14 @@ The source files remain in the project root. The website has not been deployed.
 
 ## Glass sidebar design iteration
 
-The current navigation and motion follow the supplied `D:/reference vedio.mp4`: fixed translucent desktop sidebar, adaptive light/dark contrast, full-height video header, reversible word reveals and image reveals. The complete CRED logo appears above every page. Coral page transitions randomly select left, right, up or down without repeating the previous direction. Mobile and tablet layouts use full-width content with a bottom Explore / Menu / Let's talk dock and a full-screen menu. All existing page content and enquiries remain available.
+The current navigation and motion follow the supplied `D:/reference vedio.mp4`: a transparent desktop top navigation with adaptive light/dark logo contrast, a video header, reversible word reveals and image reveals. The complete CRED logo appears above every page. Coral page transitions randomly select left, right, up or down without repeating the previous direction. Mobile and tablet layouts use full-width content with a bottom Explore / Menu / Let's talk dock and a full-screen menu. All existing page content and enquiries remain available.
 
 The version from immediately before this iteration is saved locally in `qa/before-glass-sidebar/`. To restore that design, copy its `main.jsx`, `styles.css` and `motion.css` back into `src/`, then rebuild. `glass.css` will no longer be imported. This backup is intentionally excluded from publishing by `.gitignore`.
+
+## September 2026 client corrections
+
+The seven correction documents have been applied to page structure, calls to action, readable text sizes, Mission/Vision, programme filters and the shared footer while retaining the existing colour palette and mobile navigation. The WhatsApp helper appears on every page, hides during scrolling and reappears after 750 ms of idle time. It stays above the mobile dock and hides while the menu is open.
+
+The impact figures remain unpublished until explicitly verified; `src/client-content.js` controls their approval flag. Separately mentioned approved article documents have not been supplied, so the Blogs cards currently link to the existing advisory articles. Image placeholders remain numbered.
+
+Run `npm test` with the local preview running. Set `TEST_URL` if Vite uses a port other than 5173. Browser verification requires Playwright and Chrome; set `PLAYWRIGHT_MODULE` for a nonstandard Playwright installation.
