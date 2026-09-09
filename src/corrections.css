@@ -1,7 +1,7 @@
 /* Client corrections: preserve the established palette and motion. */
 :root { --muted: #68555e; }
 h1, .page-banner h1 { font-size: clamp(36px, 4.1vw, 64px); line-height: 1.13; }
-h2, .section-heading h2, .closing-cta h2 { font-size: clamp(31px, 3.3vw, 49px); line-height: 1.16; }
+h2, .intro-copy h2, .section-heading h2, .closing-cta h2 { font-size: clamp(29px, 3vw, 45px); line-height: 1.16; }
 p { font-size: 17px; line-height: 1.7; }
 .page-banner { min-height: 355px; padding-bottom: 44px; }
 .page-banner p { max-width: 760px; font-size: 18px; margin-top: 24px; }
@@ -63,7 +63,7 @@ p { font-size: 17px; line-height: 1.7; }
 .blog-card-copy .text-link { margin-top: auto; }
 .article-body { max-width: 1000px; margin: auto; }
 .article-body p { font-size: 19px; margin: 25px 0; }
-.contact-copy h2 { font-size: 43px; }
+.contact-copy h2 { font-size: 39px; }
 .consultation-form label { font-size: 15px; }
 .consultation-form input, .consultation-form select, .consultation-form textarea { font-size: 16px; }
 .consultation-form input::placeholder, .consultation-form textarea::placeholder { font-size: 15px; }
@@ -110,7 +110,7 @@ p { font-size: 17px; line-height: 1.7; }
   .hero-actions { flex-direction: column; align-items: stretch; }
   .hero-actions .button { font-size: 14px; }
   .hero { min-height: 700px; }
-  h2, .section-heading h2, .closing-cta h2, .contact-copy h2 { font-size: 30px; }
+  h2, .intro-copy h2, .section-heading h2, .closing-cta h2, .contact-copy h2 { font-size: 28px; }
   .page-banner { min-height: 360px; }
   .page-banner p { font-size: 17px; }
   .quick-access { padding-top: 22px; padding-bottom: 22px; }
@@ -133,3 +133,21 @@ p { font-size: 17px; line-height: 1.7; }
 @media(prefers-reduced-motion:reduce) { .whatsapp-helper { transition: none; } }
 
 @media(max-width:900px) { .hero .video-control { bottom: 24px; min-height: 40px; padding: 10px; } }
+
+/* Annotation refinements shared across every page. */
+.eyebrow { font-size: 15px; letter-spacing: 1.2px; }
+.eyebrow .tiny-square { width: 9px; height: 9px; }
+.programme-copy .micro-label { font-size: 14px; text-transform: uppercase; }
+.consultation-form > h3 { font-size: 26px; margin-bottom: 24px; }
+.footer-about .footer-brand { display: block; width: 190px; max-width: 100%; }
+.whatsapp-helper { gap: 14px; padding: 18px 23px; }
+.whatsapp-helper strong, .whatsapp-helper span span { font-size: 15px; }
+@media(max-width:900px) {
+  .whatsapp-helper { padding: 15px; }
+}
+@media(max-width:640px) {
+  .eyebrow { font-size: 14px; }
+  .programme-copy .micro-label { font-size: 14px; }
+  .consultation-form > h3 { font-size: 25px; }
+  .footer-about .footer-brand { width: 160px; }
+}

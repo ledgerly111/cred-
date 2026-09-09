@@ -17,8 +17,8 @@ export default function WhatsAppHelper({ route, menuOpen }) {
   }, []);
   useEffect(() => { clearTimeout(timer.current); setScrolling(false); }, [route]);
   const hidden = scrolling || menuOpen;
-  return <a className={`whatsapp-helper${hidden ? ' is-scrolling' : ''}`} href={whatsappLink()} target="_blank" rel="noopener noreferrer" aria-label="Need guidance? Speak to CRED on WhatsApp" aria-hidden={hidden} tabIndex={hidden ? -1 : 0}>
-    <MessageCircle size={27} aria-hidden="true" />
-    <span><strong>Need guidance?</strong><span>Speak to CRED</span></span>
+  return <a className={`whatsapp-helper${hidden ? ' is-scrolling' : ''}`} href={whatsappLink()} target="_blank" rel="noopener noreferrer" aria-label="Need guidance? Connect with us on WhatsApp" aria-hidden={hidden} tabIndex={hidden ? -1 : 0}>
+    <MessageCircle size={32} aria-hidden="true" />
+    <span><strong>Need guidance?</strong><span>Connect with us</span></span>
   </a>;
 }
