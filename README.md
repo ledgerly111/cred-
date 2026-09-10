@@ -22,7 +22,7 @@ Open the local URL printed by Vite. `npm run build` creates the production site 
 
 ## Image replacement map
 
-The source document contains no embedded images or explicit image-slot count. Thirteen numbered slots were assigned for this layout. Repeated programme cards intentionally reuse the same number.
+The source document contains no embedded images or explicit image-slot count. Eighteen numbered slots are assigned for this layout, including eight blog article images. Repeated programme cards intentionally reuse the same number.
 
 | Number | Location / suggested subject |
 | --- | --- |
@@ -36,15 +36,13 @@ The source document contains no embedded images or explicit image-slot count. Th
 | 8 | Professional qualifications |
 | 9 | Short courses and skills development |
 | 10 | Scholarships — education access |
-| 11 | Blogs — education decisions |
-| 12 | Blogs — career progression |
-| 13 | Blogs — scholarship guidance |
+| 11–18 | Eight blog articles in the order supplied in the Blog Launch Pack |
 
 The shared `Placeholder` component in `src/main.jsx` controls the numbered image areas. Supply the corresponding images to replace each slot. No stock photos or generated images were substituted.
 
 ## Content and launch handoff
 
-Content is adapted from `CRED_Global_Learning_Website_Content (1).docx`. Editorial headings are styled for the reference layout. The three Blogs quick guides are condensed from the document's existing advisory content; the document did not contain complete blog articles.
+Content is adapted from `CRED_Global_Learning_Website_Content (1).docx`. Editorial headings are styled for the reference layout. The eight blog articles are supplied in `CRED_Website_Blog_Launch_Pack.docx` and preserved in `src/blog-content.js`.
 
 Items intentionally awaiting confirmed business information:
 
@@ -66,6 +64,8 @@ The version from immediately before this iteration is saved locally in `qa/befor
 
 The seven correction documents have been applied to page structure, calls to action, readable text sizes, Mission/Vision, programme filters and the shared footer while retaining the existing colour palette and mobile navigation. The WhatsApp helper appears on every page, hides during scrolling and reappears after 750 ms of idle time. It stays above the mobile dock and hides while the menu is open.
 
-The impact figures remain unpublished until explicitly verified; `src/client-content.js` controls their approval flag. Separately mentioned approved article documents have not been supplied, so the Blogs cards currently link to the existing advisory articles. Image placeholders remain numbered.
+The impact figures remain unpublished until explicitly verified; `src/client-content.js` controls their approval flag. The supplied Blog Launch Pack is now integrated: all eight cards link to the complete articles. Image placeholders remain numbered.
 
 Run `npm test` with the local preview running. Set `TEST_URL` if Vite uses a port other than 5173. Browser verification requires Playwright and Chrome; set `PLAYWRIGHT_MODULE` for a nonstandard Playwright installation.
+
+See [COMPONENTS.md](COMPONENTS.md) for the TypeScript/Tailwind/shadcn component setup, branded COBE globe, live location map and blog integration details.

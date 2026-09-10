@@ -87,7 +87,7 @@ try {
   await page.locator('.article-body').waitFor({ state: 'visible' });
   await page.getByRole('link', { name: '← Back to Blogs' }).click();
   await page.locator('.blog-card').first().waitFor({ state: 'visible' });
-  assert.equal(await page.locator('.blog-card').count(), 3);
+  assert.equal(await page.locator('.blog-card').count(), 8);
   await route('scholarships');
   assert.equal(await page.getByText('Availability, eligibility, deadlines and awards are subject to the relevant institution or scholarship provider. Guidance does not guarantee a scholarship.', { exact: true }).count(), 0);
   await page.getByRole('button', { name: /Working Professional Scholarship/ }).click();
