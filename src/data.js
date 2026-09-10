@@ -37,12 +37,12 @@ export const services = [
   ['Ongoing learner support', 'Where included in the learner’s service plan, CRED provides scheduled progress conversations, skills recommendations and guidance on possible next steps after enrolment.'],
 ];
 export const programmes = [
-  { id: 4, title: 'Undergraduate Degrees', type: 'Academic', description: 'Build a strong academic foundation and prepare for future professional opportunities through recognised bachelor’s-level study options.' },
-  { id: 5, title: 'Postgraduate Degrees', type: 'Academic', description: 'Develop specialist knowledge, leadership capability or a new professional direction through master’s-level study.' },
-  { id: 6, title: 'Doctoral & Executive Education', type: 'Executive', description: 'Explore advanced academic and executive pathways designed for experienced professionals, senior leaders and researchers.' },
-  { id: 7, title: 'Diplomas & Progression Pathways', type: 'Academic', description: 'Begin or continue your higher education journey through structured diploma and top-up routes, subject to institutional entry and progression requirements.' },
-  { id: 8, title: 'Professional Qualifications', type: 'Professional', description: 'Strengthen professional credibility through qualifications connected to fields such as accounting, finance, management, project management, human resources and other specialist areas.' },
-  { id: 9, title: 'Short Courses & Skills Development', type: 'Skills', description: 'Build focused capabilities in areas relevant to the modern workplace, including leadership, communication, digital business and emerging technologies.' },
+  { id: 4, imageNumber: 3, title: 'Undergraduate Degrees', type: 'Academic', description: 'Build a strong academic foundation and prepare for future professional opportunities through recognised bachelor’s-level study options.' },
+  { id: 5, imageNumber: 4, title: 'Postgraduate Degrees', type: 'Academic', description: 'Develop specialist knowledge, leadership capability or a new professional direction through master’s-level study.' },
+  { id: 6, imageNumber: 5, title: 'Doctoral & Executive Education', type: 'Executive', description: 'Explore advanced academic and executive pathways designed for experienced professionals, senior leaders and researchers.' },
+  { id: 7, imageNumber: 6, title: 'Diplomas & Progression Pathways', type: 'Academic', description: 'Begin or continue your higher education journey through structured diploma and top-up routes, subject to institutional entry and progression requirements.' },
+  { id: 8, imageNumber: 7, title: 'Professional Qualifications', type: 'Professional', description: 'Strengthen professional credibility through qualifications connected to fields such as accounting, finance, management, project management, human resources and other specialist areas.' },
+  { id: 9, imageNumber: 8, title: 'Short Courses & Skills Development', type: 'Skills', description: 'Build focused capabilities in areas relevant to the modern workplace, including leadership, communication, digital business and emerging technologies.' },
 ];
 export const subjects = ['Business and Management', 'Accounting and Finance', 'Human Resource Management', 'Marketing and Digital Business', 'Project Management', 'Logistics and Supply Chain', 'Healthcare Management', 'Information Technology and Data', 'Law and Corporate Administration', 'Hospitality and Tourism', 'Energy and Sustainability', 'Data Science', 'Artificial Intelligence', 'Cyber Security', 'Computing'];
 export const scholarships = [

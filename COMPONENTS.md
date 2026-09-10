@@ -23,6 +23,6 @@ Tailwind's theme and utilities are imported without Preflight to avoid resetting
 
 `src/blog-content.js` contains all eight articles from `CRED_Website_Blog_Launch_Pack.docx`, including exact titles, introductions, subheadings, paragraphs, bullet lists, next-step copy and source links. Editorial/publishing notes at the beginning of the document are not displayed as an article. No author or publication date has been invented. Cards on Home and Blogs use the document's introductions. Full articles use `#/blog?article=11` through `#/blog?article=18`.
 
-Numbered image slots 11–18 are reserved for the eight articles in document order. The earlier non-blog slots 1–10 remain unchanged. Supplied article claims are reproduced as editorial content; this integration does not independently re-audit their statistics.
+Numbered image slots 10–17 are reserved for the eight articles in document order. Non-blog image slots are 1–9 after the former About image was replaced by statistics cards. Article IDs and URLs remain unchanged. Supplied article claims are reproduced as editorial content; this integration does not independently re-audit their statistics.
 
 Validation: `npm run typecheck`, `npm run build`, `npm test`, and `node scripts/verify-launch.mjs`. The browser scripts require a running preview and Playwright/Chrome. Set `TEST_URL` to its address when needed.

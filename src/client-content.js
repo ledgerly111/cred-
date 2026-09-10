@@ -5,12 +5,11 @@ export const FOOTER_DESCRIPTION = 'CRED goes beyond admissions to shape educatio
 export function whatsappLink(message = 'Hello CRED! I would like to book a free consultation. Please help me explore programmes, scholarships and a learning pathway that fits my career goals.') {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
-// Publish only after CRED confirms the figures, as required in its corrections.
-export const impactFiguresApproved = false;
+// Figures explicitly supplied and requested for display by the client.
 export const impactFigures = [
   ['350+', 'Learners counselled'],
   ['125+', 'Successful enrolments'],
   ['50+', 'Academic and professional pathways'],
   ['12+', 'Nationalities supported'],
-  ['60%', 'Enquiries through referrals or returning learners'],
+  ['60%', 'Enquiries received through referrals or returning learners'],
 ];

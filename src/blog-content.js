@@ -2,6 +2,7 @@
 export const blogArticles = [
   {
     "id": 11,
+    "imageNumber": 10,
     "title": "Degree or Professional Qualification: Which One Is Right for You?",
     "category": "Choosing the Right Qualification",
     "readTime": "5-minute read",
@@ -66,6 +67,7 @@ export const blogArticles = [
   },
   {
     "id": 12,
+    "imageNumber": 11,
     "title": "How to Choose a Programme That Supports Your Career Goals",
     "category": "Academic and Professional Pathways",
     "readTime": "5-minute read",
@@ -128,6 +130,7 @@ export const blogArticles = [
   },
   {
     "id": 13,
+    "imageNumber": 12,
     "title": "Five Questions to Ask Before Starting a Degree as a Working Professional",
     "category": "Guidance for Working Professionals",
     "readTime": "5-minute read",
@@ -190,6 +193,7 @@ export const blogArticles = [
   },
   {
     "id": 14,
+    "imageNumber": 13,
     "title": "Professional Qualification Exemptions: What You Need to Know",
     "category": "Academic and Professional Pathways",
     "readTime": "5-minute read",
@@ -252,6 +256,7 @@ export const blogArticles = [
   },
   {
     "id": 15,
+    "imageNumber": 14,
     "title": "How to Choose the Right MBA Specialisation",
     "category": "Choosing the Right Qualification",
     "readTime": "5-minute read",
@@ -311,6 +316,7 @@ export const blogArticles = [
   },
   {
     "id": 16,
+    "imageNumber": 15,
     "title": "Scholarship, Tuition Discount or Payment Plan: What Is the Difference?",
     "category": "Scholarships and Education Finance",
     "readTime": "5-minute read",
@@ -389,6 +395,7 @@ export const blogArticles = [
   },
   {
     "id": 17,
+    "imageNumber": 16,
     "title": "Why Qualifications Need a Clear Career Purpose",
     "category": "Career Development and Employability",
     "readTime": "5-minute read",
@@ -455,6 +462,7 @@ export const blogArticles = [
   },
   {
     "id": 18,
+    "imageNumber": 17,
     "title": "How to Build Your Education and Career Roadmap",
     "category": "Career Development and Employability",
     "readTime": "5-minute read",

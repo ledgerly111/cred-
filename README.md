@@ -22,21 +22,20 @@ Open the local URL printed by Vite. `npm run build` creates the production site 
 
 ## Image replacement map
 
-The source document contains no embedded images or explicit image-slot count. Eighteen numbered slots are assigned for this layout, including eight blog article images. Repeated programme cards intentionally reuse the same number.
+The source document contains no embedded images or explicit image-slot count. Seventeen numbered slots are assigned for this layout, including eight blog article images. Repeated programme cards intentionally reuse the same number.
 
 | Number | Location / suggested subject |
 | --- | --- |
 | 1 | Home introduction — purposeful learning journey |
-| 2 | About — CRED team / people |
-| 3 | Services — advisor consultation |
-| 4 | Undergraduate degrees |
-| 5 | Postgraduate degrees |
-| 6 | Doctoral and executive education |
-| 7 | Diplomas and progression pathways |
-| 8 | Professional qualifications |
-| 9 | Short courses and skills development |
-| 10 | Scholarships — education access |
-| 11–18 | Eight blog articles in the order supplied in the Blog Launch Pack |
+| 2 | Services — advisor consultation |
+| 3 | Undergraduate Degrees |
+| 4 | Postgraduate Degrees |
+| 5 | Doctoral & Executive Education |
+| 6 | Diplomas & Progression Pathways |
+| 7 | Professional Qualifications |
+| 8 | Short Courses & Skills Development |
+| 9 | Scholarships — education access |
+| 10–17 | Eight blog articles in launch-pack order |
 
 The shared `Placeholder` component in `src/main.jsx` controls the numbered image areas. Supply the corresponding images to replace each slot. No stock photos or generated images were substituted.
 
@@ -48,7 +47,6 @@ Items intentionally awaiting confirmed business information:
 
 - Official email, full address and office hours. The supplied city and country are shown. The client-provided telephone and WhatsApp number is +94 77 059 7811.
 - Optional CRM/email integration. The consultation form validates fields and opens WhatsApp with the enquiry prefilled for +94 77 059 7811. The student reviews the message and presses Send; the website does not claim delivery or store personal information. A fallback link lets the student reopen WhatsApp.
-- Verified impact figures. The document supplied `350+`, `125+`, `50+`, `12+` and `60%` on Home but used `[XX]` elsewhere and explicitly called for verification. Numerical claims have been held out until confirmed.
 - Corporate scholarship terms: the document mentions a 25% discount but provides no eligibility or partner details. The site invites confirmation with an advisor instead of advertising an unverified fixed discount.
 - Approved Privacy Policy and Terms content, newsletter delivery, and verified social account URLs. No fabricated legal policies, subscription confirmations or dead social links are included.
 
@@ -64,8 +62,10 @@ The version from immediately before this iteration is saved locally in `qa/befor
 
 The seven correction documents have been applied to page structure, calls to action, readable text sizes, Mission/Vision, programme filters and the shared footer while retaining the existing colour palette and mobile navigation. The WhatsApp helper appears on every page, hides during scrolling and reappears after 750 ms of idle time. It stays above the mobile dock and hides while the menu is open.
 
-The impact figures remain unpublished until explicitly verified; `src/client-content.js` controls their approval flag. The supplied Blog Launch Pack is now integrated: all eight cards link to the complete articles. Image placeholders remain numbered.
+The five client-supplied impact figures are displayed in animated cards at the client-requested positions on Home and About. The supplied Blog Launch Pack is now integrated: all eight cards link to the complete articles. Image placeholders remain numbered.
 
 Run `npm test` with the local preview running. Set `TEST_URL` if Vite uses a port other than 5173. Browser verification requires Playwright and Chrome; set `PLAYWRIGHT_MODULE` for a nonstandard Playwright installation.
 
 See [COMPONENTS.md](COMPONENTS.md) for the TypeScript/Tailwind/shadcn component setup, branded COBE globe, live location map and blog integration details.
+
+The Home Blueprint illustration and former About image slot are replaced by `src/ImpactCards.tsx`: staggered card entrances, rolling counters and a subtle pointer tilt. Each card replays on viewport re-entry; reduced-motion preferences show the final values immediately. Article IDs stay stable while separate image numbers reflect removal of the former image 2.
