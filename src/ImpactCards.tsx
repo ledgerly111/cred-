@@ -46,7 +46,6 @@ function ImpactCard({ value, label, index }: { value: string; label: string; ind
     }}
     onPointerLeave={e => { e.currentTarget.style.setProperty('--tilt-x', '0deg'); e.currentTarget.style.setProperty('--tilt-y', '0deg'); }}>
     <div className="impact-tile-face">
-      <span className="impact-index" aria-hidden="true">CRED / 0{index + 1}</span>
       <span className="impact-value" aria-hidden="true">
         {String(count).padStart(String(target).length, '0').split('').map((digit, i) => <span className="impact-digit" key={i}><span className="impact-reel" style={{ transform: `translateY(-${Number(digit)}em)` }}>{Array.from({ length: 10 }, (_, n) => <span key={n}>{n}</span>)}</span></span>)}
         <span className="impact-suffix">{suffix}</span>

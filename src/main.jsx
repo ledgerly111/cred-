@@ -22,7 +22,22 @@ import { DISPLAY_PHONE, WHATSAPP_NUMBER, whatsappLink, CONTACT_DESCRIPTION, FOOT
 const contactLink = (interest = '') => `#/contact${interest ? `?interest=${encodeURIComponent(interest)}` : ''}`;
 function Button({ children = 'Book a Free Consultation', href = contactLink(), light = false, ...props }) { return <a className={`button ${light ? 'button-light' : ''}`} href={href} {...props}><span>{children}</span><ArrowUpRight size={22} /></a>; }
 function Eyebrow({ children, number }) { return <div className="eyebrow"><span className="tiny-square" />{children}{number && <span className="eyebrow-number">{number}</span>}</div>; }
-function Placeholder({ number, label, className = '' }) { return <div className={`image-placeholder ${className}`} role="img" aria-label={`Image placeholder ${number}: ${label}`}><span className="placeholder-corner">CRED / IMAGE {String(number).padStart(2, '0')}</span><span className="placeholder-number">{number}</span><span className="placeholder-caption">{label}<Plus size={16} /></span></div>; }
+const availableImageNumbers = new Set(Array.from({ length: 16 }, (_, index) => index + 2));
+
+function Placeholder({ number, label, className = '' }) {
+  const imagePath = availableImageNumbers.has(number)
+    ? `/images/image-${String(number).padStart(2, '0')}.jpg`
+    : null;
+
+  if (imagePath) {
+    return <div className={`image-placeholder image-filled ${className}`} data-image-number={number}>
+      <img src={imagePath} alt={label} loading="lazy" decoding="async" />
+      <span className="image-caption" aria-hidden="true">{label}</span>
+    </div>;
+  }
+
+  return <div className={`image-placeholder ${className}`} data-image-number={number} role="img" aria-label={`Image placeholder ${number}: ${label}`}><span className="placeholder-corner">IMAGE {String(number).padStart(2, '0')}</span><span className="placeholder-number">{number}</span><span className="placeholder-caption">{label}<Plus size={16} /></span></div>;
+}
 function observeScrollMotion(nodes) {
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {

@@ -11,5 +11,4 @@ export const impactFigures = [
   ['125+', 'Successful enrolments'],
   ['50+', 'Academic and professional pathways'],
   ['12+', 'Nationalities supported'],
-  ['60%', 'Enquiries received through referrals or returning learners'],
 ];
