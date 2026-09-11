@@ -22,7 +22,7 @@ import { DISPLAY_PHONE, WHATSAPP_NUMBER, whatsappLink, CONTACT_DESCRIPTION, FOOT
 const contactLink = (interest = '') => `#/contact${interest ? `?interest=${encodeURIComponent(interest)}` : ''}`;
 function Button({ children = 'Book a Free Consultation', href = contactLink(), light = false, ...props }) { return <a className={`button ${light ? 'button-light' : ''}`} href={href} {...props}><span>{children}</span><ArrowUpRight size={22} /></a>; }
 function Eyebrow({ children, number }) { return <div className="eyebrow"><span className="tiny-square" />{children}{number && <span className="eyebrow-number">{number}</span>}</div>; }
-const availableImageNumbers = new Set(Array.from({ length: 16 }, (_, index) => index + 2));
+const availableImageNumbers = new Set(Array.from({ length: 17 }, (_, index) => index + 1));
 
 function Placeholder({ number, label, className = '' }) {
   const imagePath = availableImageNumbers.has(number)

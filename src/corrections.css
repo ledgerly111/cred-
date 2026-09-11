@@ -135,7 +135,8 @@ p { font-size: 17px; line-height: 1.7; }
 @media(max-width:900px) { .hero .video-control { bottom: 24px; min-height: 40px; padding: 10px; } }
 
 /* Annotation refinements shared across every page. */
-.eyebrow { font-size: 15px; letter-spacing: 1.2px; }
+.eyebrow { font-size: 17px; letter-spacing: 1.2px; }
+.section-heading h2, .eyebrow + h2 { font-size: clamp(27px, 2.8vw, 42px); }
 .eyebrow .tiny-square { width: 9px; height: 9px; }
 .programme-copy .micro-label { font-size: 14px; text-transform: uppercase; }
 .consultation-form > h3 { font-size: 26px; margin-bottom: 24px; }
@@ -146,7 +147,8 @@ p { font-size: 17px; line-height: 1.7; }
   .whatsapp-helper { padding: 15px; }
 }
 @media(max-width:640px) {
-  .eyebrow { font-size: 14px; }
+  .eyebrow { font-size: 16px; }
+  .section-heading h2, .eyebrow + h2 { font-size: 26px; }
   .programme-copy .micro-label { font-size: 14px; }
   .consultation-form > h3 { font-size: 25px; }
   .footer-about .footer-brand { width: 160px; }

@@ -2,10 +2,8 @@
 
 The image-to-slot mapping comes from the client-supplied `Images.docx`.
 
-Image 1 is intentionally not included. Its supplied source is an Unsplash+ asset and requires a licensed download:
-- 01 — https://unsplash.com/photos/a-group-of-cheerful-university-students-with-teacher-celebrating-outdoors-looking-at-camera-graduation-concept-A7Dw7hIj5uU
-
 Downloaded under the Unsplash License:
+- 01 — https://unsplash.com/photos/a-large-group-of-people-in-graduation-caps-and-gowns-yIgUs4UeYgU (client replacement supplied September 11, 2026; Moses Malik Roldan)
 - 02 — https://unsplash.com/photos/students-using-phones-in-a-lecture-hall-sp6F_ox9Ph8
 - 03 — https://unsplash.com/photos/people-throwing-hats-on-air-_kd5cxwZOK4
 - 04 — https://unsplash.com/photos/a-group-of-people-in-a-room-with-a-projector-screen-1-aA2Fadydc
