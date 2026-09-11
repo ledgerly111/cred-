@@ -16,6 +16,7 @@ import './adaptive-header.css';
 import './corrections.css';
 import ImpactCards from './ImpactCards';
 import './blog-location.css';
+import './heading-hierarchy.css';
 import WhatsAppHelper from './WhatsAppHelper';
 import { DISPLAY_PHONE, WHATSAPP_NUMBER, whatsappLink, CONTACT_DESCRIPTION, FOOTER_DESCRIPTION } from './client-content';
 
