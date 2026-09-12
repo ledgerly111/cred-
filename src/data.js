@@ -14,10 +14,10 @@ export const blueprint = [
   ['Build your next chapter', 'Build a practical learning and progression plan.'],
 ];
 export const differences = [
-  ['Career-first guidance', 'We begin with your goal, not with a programme list.'],
-  ['Academic and professional pathways', 'We help you understand how different qualifications may complement one another.'],
-  ['Clear, transparent information', 'We explain available entry requirements, fees, duration, delivery and progression before you decide.'],
-  ['Human support', 'You receive thoughtful guidance from enquiry through enrolment and, where available, continued progress support.'],
+  ['Career-First Guidance', 'We begin with your goal, not with a programme list.'],
+  ['Academic and Professional Pathways', 'We help you understand how different qualifications may complement one another.'],
+  ['Clear, Transparent Information', 'We explain available entry requirements, fees, duration, delivery and progression before you decide.'],
+  ['Human Support', 'You receive thoughtful guidance from enquiry through enrolment and, where available, continued progress support.'],
 ];
 export const values = [
   ['Purpose', 'Every recommendation should have a clear reason and connection to the learner’s goals.'],
