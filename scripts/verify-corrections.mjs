@@ -27,8 +27,9 @@ try {
   assert(await page.locator('video').evaluate(v => v.muted && v.playsInline && !v.paused));
   await page.screenshot({ path: 'qa/corrections-home-desktop.png' });
   const helper = page.locator('.whatsapp-helper');
+  assert.equal(await page.locator('.image-caption').count(), 0, 'Image caption overlays should not be rendered');
   const href = new URL(await helper.getAttribute('href'));
-  assert.equal(href.pathname, '/94770597811');
+  assert.equal(href.pathname, '/971508532770');
   assert.match(href.searchParams.get('text'), /free consultation/);
   await page.evaluate(() => window.scrollBy({ top: 250, behavior: 'instant' }));
   await page.waitForTimeout(200);
@@ -75,7 +76,7 @@ try {
   await page.evaluate(() => { window.open = url => { window.__preparedWhatsAppUrl = url; return null; }; });
   await page.locator('button[type="submit"]').click();
   const prepared = new URL(await page.evaluate(() => window.__preparedWhatsAppUrl));
-  assert.equal(prepared.pathname, '/94770597811');
+  assert.equal(prepared.pathname, '/971508532770');
   assert.match(prepared.searchParams.get('text'), /QA Learner/);
   assert.match(prepared.searchParams.get('text'), /Artificial Intelligence/);
   assert.match(prepared.searchParams.get('text'), /education & career/);

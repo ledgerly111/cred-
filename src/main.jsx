@@ -33,7 +33,6 @@ function Placeholder({ number, label, className = '' }) {
   if (imagePath) {
     return <div className={`image-placeholder image-filled ${className}`} data-image-number={number}>
       <img src={imagePath} alt={label} loading="lazy" decoding="async" />
-      <span className="image-caption" aria-hidden="true">{label}</span>
     </div>;
   }
 
