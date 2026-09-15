@@ -28,6 +28,7 @@ try {
   await page.screenshot({ path: 'qa/corrections-home-desktop.png' });
   const helper = page.locator('.whatsapp-helper');
   assert.equal(await page.locator('.image-caption').count(), 0, 'Image caption overlays should not be rendered');
+  assert.equal(await page.getByText('QUALIFICATIONS WITH A CAREER PURPOSE.', { exact: true }).count(), 0, 'Footer tagline should not be rendered');
   const href = new URL(await helper.getAttribute('href'));
   assert.equal(href.pathname, '/971508532770');
   assert.match(href.searchParams.get('text'), /free consultation/);
