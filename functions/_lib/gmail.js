@@ -6,12 +6,40 @@ function base64Url(bytes) {
   return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
+function base64(bytes) {
+  let binary = '';
+  for (const byte of bytes) binary += String.fromCharCode(byte);
+  return btoa(binary);
+}
+
 function base64UrlText(value) {
   return base64Url(encoder.encode(value));
 }
 
 function safeHeader(value) {
   return String(value).replace(/[\r\n]+/g, ' ').trim();
+}
+
+function encodedHeader(value) {
+  const safeValue = safeHeader(value);
+  if (/^[\x20-\x7e]*$/.test(safeValue)) return safeValue;
+
+  const chunks = [];
+  let chunk = '';
+  for (const character of safeValue) {
+    const candidate = `${chunk}${character}`;
+    if (chunk && base64(encoder.encode(candidate)).length > 56) {
+      chunks.push(chunk);
+      chunk = character;
+    } else {
+      chunk = candidate;
+    }
+  }
+  if (chunk) chunks.push(chunk);
+
+  return chunks
+    .map(part => `=?UTF-8?B?${base64(encoder.encode(part))}?=`)
+    .join(' ');
 }
 
 async function getAccessToken(env) {
@@ -31,13 +59,13 @@ async function getAccessToken(env) {
   return result.access_token;
 }
 
-function mimeMessage({ from, to, replyTo, subject, text, html }) {
+export function mimeMessage({ from, to, replyTo, subject, text, html }) {
   const boundary = `cred_${crypto.randomUUID().replace(/-/g, '')}`;
   const headers = [
     `From: CRED Global Learning <${safeHeader(from)}>`,
     `To: ${safeHeader(to)}`,
     `Reply-To: ${safeHeader(replyTo)}`,
-    `Subject: ${safeHeader(subject)}`,
+    `Subject: ${encodedHeader(subject)}`,
     'MIME-Version: 1.0',
     `Content-Type: multipart/alternative; boundary="${boundary}"`,
     '',
