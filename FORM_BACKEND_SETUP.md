@@ -14,7 +14,14 @@ The repository now contains the complete website-side implementation. Production
 
 ## 1. Create and migrate the D1 database
 
-Create a D1 database named `cred-leads`, apply `migrations/0001_enquiries.sql`, and bind it to the existing Cloudflare Pages project with the variable name:
+Create a D1 database named `cred-leads`, apply the migrations in order, and bind it to the existing Cloudflare Pages project with the variable name:
+
+```text
+migrations/0001_enquiries.sql
+migrations/0002_short_reference_numbers.sql
+```
+
+The second migration keeps the UUID as the private database identifier and adds a sequential four-digit reference for students and staff.
 
 ```text
 DB

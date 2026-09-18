@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { mimeMessage } from '../functions/_lib/gmail.js';
+import { studentAcknowledgementHtml } from '../functions/_lib/email-template.js';
 
 const message = mimeMessage({
   from: 'info@crededu.com',
@@ -28,5 +29,16 @@ assert.equal(decoded, 'New CRED website enquiry — Test Student');
 assert.match(message, /Reply-To: student@example\.com/);
 assert.match(message, /Content-Type: text\/plain; charset="UTF-8"/);
 assert.match(message, /Content-Type: text\/html; charset="UTF-8"/);
+
+const acknowledgement = studentAcknowledgementHtml({
+  name: 'Test <Student>',
+  referenceNumber: '1283',
+});
+assert.match(acknowledgement, /CRED Global Learning/);
+assert.match(acknowledgement, /cred-email-logo\.png/);
+assert.match(acknowledgement, /Your reference number/);
+assert.match(acknowledgement, />1283</);
+assert.doesNotMatch(acknowledgement, /Test <Student>/);
+assert.match(acknowledgement, /Test &lt;Student&gt;/);
 
 console.log('Gmail MIME checks passed.');

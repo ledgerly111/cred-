@@ -80,7 +80,7 @@ try {
     await route.fulfill({
       status: 202,
       contentType: 'application/json',
-      body: JSON.stringify({ ok: true, reference: '11111111-1111-4111-8111-111111111111' }),
+      body: JSON.stringify({ ok: true, reference: '1283' }),
     });
   });
   await page.locator('button[type="submit"]').click();

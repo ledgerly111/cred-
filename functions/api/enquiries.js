@@ -1,15 +1,10 @@
 import { cleanText, clientIp, isEmail, json, methodNotAllowed, requireSameOrigin, sha256 } from '../_lib/http.js';
 import { sendGmail } from '../_lib/gmail.js';
+import { escapeHtml, studentAcknowledgementHtml } from '../_lib/email-template.js';
 
 const MAX_BODY_BYTES = 12_000;
 const RATE_WINDOW_MS = 15 * 60 * 1000;
 const RATE_LIMIT = 5;
-
-function escapeHtml(value) {
-  return String(value).replace(/[&<>'"]/g, character => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;',
-  })[character]);
-}
 
 function validate(body) {
   const enquiry = {
@@ -51,8 +46,8 @@ async function deliverEmails(env, lead) {
     to: env.CRED_LEADS_EMAIL,
     replyTo: lead.email,
     subject: `New CRED website enquiry — ${lead.name}`,
-    text: `A new consultation request was submitted.\n\n${textRows}\n\nLead reference: ${lead.id}`,
-    html: `<div style="font-family:Arial,sans-serif;color:#361721"><h1 style="color:#762b3d">New website enquiry</h1><table>${htmlRows}</table><p style="color:#7c6970">Lead reference: ${escapeHtml(lead.id)}</p></div>`,
+    text: `A new consultation request was submitted.\n\n${textRows}\n\nLead reference: ${lead.referenceNumber}`,
+    html: `<div style="font-family:Arial,sans-serif;color:#361721"><h1 style="color:#762b3d">New website enquiry</h1><table>${htmlRows}</table><p style="color:#7c6970">Lead reference: ${escapeHtml(lead.referenceNumber)}</p></div>`,
   });
 
   await sendGmail(env, {
@@ -60,9 +55,21 @@ async function deliverEmails(env, lead) {
     to: lead.email,
     replyTo: env.CRED_LEADS_EMAIL,
     subject: 'We received your CRED consultation request',
-    text: `Hello ${lead.name},\n\nThank you for contacting CRED Global Learning. We have received your consultation request and a member of our team will contact you to discuss your goals.\n\nYour reference: ${lead.id}\n\nCRED Global Learning`,
-    html: `<div style="font-family:Arial,sans-serif;color:#361721"><h1 style="color:#762b3d">Thank you for contacting CRED</h1><p>Hello ${escapeHtml(lead.name)},</p><p>We have received your consultation request. A member of our team will contact you to discuss your goals.</p><p><strong>Your reference:</strong> ${escapeHtml(lead.id)}</p><p>CRED Global Learning</p></div>`,
+    text: `Hello ${lead.name},\n\nThank you for contacting CRED Global Learning. Your consultation request is safely with our team, and an advisor will contact you to understand your goals and help you consider the right pathway.\n\nYour reference number: ${lead.referenceNumber}\n\nCRED Global Learning\nAjman, United Arab Emirates\nhttps://crededu.com`,
+    html: studentAcknowledgementHtml(lead),
   });
+}
+
+async function reserveReferenceNumber(env) {
+  const result = await env.DB.prepare(`UPDATE enquiry_reference_counter
+    SET next_reference = next_reference + 1
+    WHERE singleton = 1 AND next_reference BETWEEN 1000 AND 9999
+    RETURNING next_reference - 1 AS reference_number`).first();
+  const referenceNumber = Number(result?.reference_number);
+  if (!Number.isInteger(referenceNumber) || referenceNumber < 1000 || referenceNumber > 9999) {
+    throw new Error('No four-digit enquiry reference numbers are available');
+  }
+  return String(referenceNumber).padStart(4, '0');
 }
 
 export async function onRequest(context) {
@@ -93,17 +100,26 @@ export async function onRequest(context) {
     return json({ error: 'Too many requests. Please wait and try again.' }, 429, { 'retry-after': '900' });
   }
 
+  let referenceNumber;
+  try {
+    referenceNumber = await reserveReferenceNumber(env);
+  } catch (error) {
+    console.error(JSON.stringify({ event: 'enquiry_reference_failed', error: String(error) }));
+    return json({ error: 'Enquiry service is temporarily unavailable.' }, 503);
+  }
+
   const lead = {
     id: crypto.randomUUID(),
+    referenceNumber,
     ...enquiry,
     source: cleanText(body.source, 120) || 'website-contact',
     createdAt: new Date().toISOString(),
   };
   await env.DB.batch([
     env.DB.prepare(`INSERT INTO enquiries
-      (id, name, email, phone, profile, interest, goals, source, status, email_status, created_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'new', 'pending', ?)`)
-      .bind(lead.id, lead.name, lead.email, lead.phone, lead.profile, lead.interest, lead.goals, lead.source, lead.createdAt),
+      (id, reference_number, name, email, phone, profile, interest, goals, source, status, email_status, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'new', 'pending', ?)`)
+      .bind(lead.id, Number(lead.referenceNumber), lead.name, lead.email, lead.phone, lead.profile, lead.interest, lead.goals, lead.source, lead.createdAt),
     env.DB.prepare('INSERT INTO enquiry_rate_limits (id, ip_hash, created_at) VALUES (?, ?, ?)')
       .bind(crypto.randomUUID(), ipHash, lead.createdAt),
   ]);
@@ -123,5 +139,5 @@ export async function onRequest(context) {
       .run();
   })());
 
-  return json({ ok: true, reference: lead.id }, 202);
+  return json({ ok: true, reference: lead.referenceNumber }, 202);
 }

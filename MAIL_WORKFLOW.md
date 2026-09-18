@@ -33,17 +33,20 @@ Google Workspace hosts the mailbox. Cloudflare runs the website endpoint and D1 
 1. The browser validates the required fields.
 2. The Pages Function validates the request again.
 3. Spam controls reject a filled honeypot, unrealistically fast submissions, invalid origins, oversized fields, and excessive requests from the same hashed IP.
-4. The lead is inserted into D1 with `email_status = pending`.
-5. The API immediately returns HTTP `202` and a unique reference to the website.
-6. A background task sends the internal notification and student acknowledgement through the Gmail API.
-7. D1 changes the row to `email_status = sent`. If sending fails, it becomes `failed`; the lead remains saved.
+4. D1 atomically reserves the next four-digit reference number, beginning at `1000`.
+5. The lead is inserted into D1 with its private UUID, public four-digit reference and `email_status = pending`.
+6. The API immediately returns HTTP `202` and the short reference to the website.
+7. A background task sends the internal notification and branded student acknowledgement through the Gmail API.
+8. D1 changes the row to `email_status = sent`. If sending fails, it becomes `failed`; the lead remains saved.
 
 Relevant source files:
 
 - `functions/api/enquiries.js` — validation, rate limiting, D1 insert, and both messages.
 - `functions/_lib/gmail.js` — Google OAuth token exchange and MIME/Gmail API sending.
 - `functions/_lib/http.js` — trusted-origin and request helpers.
-- `migrations/0001_enquiries.sql` — D1 schema.
+- `migrations/0001_enquiries.sql` — base D1 schema.
+- `migrations/0002_short_reference_numbers.sql` — four-digit reference counter and column.
+- `functions/_lib/email-template.js` — mobile-friendly CRED student acknowledgement.
 - `functions/api/admin/` — dashboard login, logout, and lead API.
 - `src/DashboardPage.jsx` — private lead dashboard UI.
 - `FORM_BACKEND_SETUP.md` — first-time activation checklist.
@@ -122,9 +125,11 @@ Use a real address controlled by the tester. Do not use a fake address because r
 5. Confirm `info@crededu.com` receives `New CRED website enquiry — <name>`.
 6. Confirm the test student's mailbox receives `We received your CRED consultation request`.
 7. Open the internal notification and verify that Reply directs a response to the student's address.
-8. Compare the reference in the form result, dashboard, and acknowledgement.
+8. Compare the same four-digit reference in the form result, dashboard, internal notification and acknowledgement.
 
 The production workflow was live-tested on 18 September 2026. Both messages arrived in `info@crededu.com` during a controlled self-addressed test. The verified reference was `0cd2073a-d4ca-4b4a-8c10-53b70c850b19`.
+
+That historical test predates the short-reference migration. New submissions display a four-digit number while retaining a UUID internally. The four-digit sequence supports references `1000` through `9999`; the service deliberately stops rather than reusing a number after the range is exhausted.
 
 ## Common future problems
 
@@ -215,6 +220,7 @@ Changing these values does not require editing the form. Replace the Cloudflare 
 
 - Read this file and inspect the current code before changing DNS or recreating resources.
 - Preserve the `cred-leads` D1 database; it contains the submission history.
+- Apply unapplied migrations in numerical order before deploying code that depends on them.
 - Export/backup D1 before destructive schema work.
 - Rotate a secret if it is ever exposed, then remove it from local files and Git history where applicable.
 - Use least-privilege OAuth (`gmail.send` only).

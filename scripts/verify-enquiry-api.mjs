@@ -4,17 +4,20 @@ import { onRequest } from '../functions/api/enquiries.js';
 const calls = [];
 const DB = {
   prepare(sql) {
-    return {
+    const statement = {
+      sql,
+      values: [],
+      async first() {
+        calls.push({ type: 'first', sql, values: this.values });
+        if (sql.includes('UPDATE enquiry_reference_counter')) return { reference_number: 1283 };
+        return { total: 0 };
+      },
+      async run() { calls.push({ type: 'run', sql, values: this.values }); return { meta: { changes: 1 } }; },
       bind(...values) {
-        const statement = {
-          sql,
-          values,
-          async first() { calls.push({ type: 'first', sql, values }); return { total: 0 }; },
-          async run() { calls.push({ type: 'run', sql, values }); return { meta: { changes: 1 } }; },
-        };
-        return statement;
+        return { ...statement, values };
       },
     };
+    return statement;
   },
   async batch(statements) { calls.push({ type: 'batch', statements }); return statements.map(() => ({ success: true })); },
 };
@@ -44,7 +47,7 @@ const response = await onRequest({
 const result = await response.json();
 assert.equal(response.status, 202);
 assert.equal(result.ok, true);
-assert.match(result.reference, /^[0-9a-f-]{36}$/);
+assert.equal(result.reference, '1283');
 assert.equal(calls.some(call => call.type === 'batch'), true);
 const originalConsoleError = console.error;
 console.error = () => {};

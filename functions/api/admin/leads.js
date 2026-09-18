@@ -16,7 +16,7 @@ export async function onRequest(context) {
   }
 
   if (request.method === 'GET') {
-    const result = await env.DB.prepare(`SELECT id, name, email, phone, profile, interest, goals, source,
+    const result = await env.DB.prepare(`SELECT id, reference_number AS referenceNumber, name, email, phone, profile, interest, goals, source,
       status, email_status AS emailStatus, created_at AS createdAt, emailed_at AS emailedAt
       FROM enquiries ORDER BY created_at DESC LIMIT 250`).all();
     return json({ leads: result.results || [] });
