@@ -25,7 +25,7 @@ export function studentAcknowledgementHtml({ name, referenceNumber }) {
             <tr><td style="height:7px;background:#fa7857;font-size:0;line-height:0;">&nbsp;</td></tr>
             <tr>
               <td style="padding:28px 34px 30px;background:#37121e;">
-                <img src="https://crededu.com/cred-email-logo.png" width="214" alt="CRED Global Learning" style="display:block;width:214px;max-width:72%;height:auto;border:0;margin:0 0 34px;">
+                <img src="https://cred-eck.pages.dev/cred-email-logo.png" width="214" alt="CRED Global Learning" style="display:block;width:214px;max-width:72%;height:auto;border:0;margin:0 0 34px;">
                 <p style="margin:0 0 14px;color:#fa7857;font-size:12px;line-height:18px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;">Consultation request received</p>
                 <h1 style="margin:0;color:#f5eeeb;font-size:38px;line-height:44px;font-weight:500;letter-spacing:-1.5px;">Your next chapter<br>starts with clarity.</h1>
               </td>
