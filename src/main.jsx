@@ -129,30 +129,119 @@ function Blog() {
 
   return <><PageBanner title="Clear advice." accent="Confident decisions." description="Practical insights for students and professionals choosing qualifications, developing skills and planning their next step." /><section id="page-content" className="section"><SectionHead label="BLOGS" title="Make your next decision an informed one." description="Explore clear, useful guidance to help you compare options and approach your next learning decision with confidence." /><BlogCards /></section><ClosingCTA /></>;
 }
+function LeadDashboard() {
+  const [password, setPassword] = useState('');
+  const [leads, setLeads] = useState(null);
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
+  const readResult = async response => response.headers.get('content-type')?.includes('application/json')
+    ? response.json()
+    : { error: 'The lead dashboard backend is awaiting Cloudflare activation.' };
+
+  async function loadLeads() {
+    setBusy(true);
+    setError('');
+    try {
+      const response = await fetch('/api/admin/leads', { credentials: 'same-origin' });
+      const result = await readResult(response);
+      if (!response.ok) throw new Error(result.error || 'Unable to load enquiries.');
+      setLeads(result.leads);
+    } catch (requestError) {
+      setLeads(null);
+      setError(requestError.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  useEffect(() => { loadLeads(); }, []);
+
+  async function login(event) {
+    event.preventDefault();
+    setBusy(true);
+    setError('');
+    try {
+      const response = await fetch('/api/admin/login', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+      const result = await readResult(response);
+      if (!response.ok) throw new Error(result.error || 'Unable to sign in.');
+      setPassword('');
+      await loadLeads();
+    } catch (requestError) {
+      setError(requestError.message);
+      setBusy(false);
+    }
+  }
+
+  async function updateStatus(id, status) {
+    setError('');
+    const response = await fetch('/api/admin/leads', {
+      method: 'PATCH',
+      credentials: 'same-origin',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ id, status }),
+    });
+    const result = await readResult(response);
+    if (!response.ok) { setError(result.error || 'Unable to update the enquiry.'); return; }
+    setLeads(current => current.map(lead => lead.id === id ? { ...lead, status } : lead));
+  }
+
+  async function logout() {
+    await fetch('/api/admin/logout', { method: 'POST', credentials: 'same-origin' });
+    setLeads(null);
+  }
+
+  if (!leads) return <section className="section dashboard-section"><div className="dashboard-login"><Eyebrow>CRED TEAM</Eyebrow><h1>Lead dashboard</h1><p>Sign in to review website enquiries.</p><form onSubmit={login}><label>Dashboard password<input type="password" value={password} onChange={event => setPassword(event.target.value)} required autoComplete="current-password" /></label><button className="button" disabled={busy} type="submit"><span>{busy ? 'Signing in…' : 'Sign in'}</span><ArrowUpRight size={21} /></button>{error && <p className="form-error" role="alert">{error}</p>}</form></div></section>;
+
+  return <section className="section dashboard-section"><div className="dashboard-heading"><div><Eyebrow>CRED TEAM</Eyebrow><h1>Website enquiries</h1><p>{leads.length} recent {leads.length === 1 ? 'lead' : 'leads'}</p></div><button className="text-link dashboard-logout" onClick={logout}>Sign out</button></div>{error && <p className="form-error" role="alert">{error}</p>}<div className="lead-list">{leads.length === 0 ? <p className="dashboard-empty">No website enquiries have been received yet.</p> : leads.map(lead => <article className="lead-card" key={lead.id}><div className="lead-card-top"><div><span className="micro-label">{new Date(lead.createdAt).toLocaleString()}</span><h2>{lead.name}</h2></div><select aria-label={`Status for ${lead.name}`} value={lead.status} onChange={event => updateStatus(lead.id, event.target.value)}><option value="new">New</option><option value="contacted">Contacted</option><option value="qualified">Qualified</option><option value="closed">Closed</option></select></div><div className="lead-details"><a href={`mailto:${lead.email}`}>{lead.email}</a>{lead.phone && <a href={`tel:${lead.phone}`}>{lead.phone}</a>}<span>{lead.profile}</span><span>{lead.interest || 'General guidance'}</span></div><p>{lead.goals}</p><div className="lead-meta"><span>Reference: {lead.id}</span><span data-email-status={lead.emailStatus}>Email: {lead.emailStatus}</span></div></article>)}</div></section>;
+}
 function Contact({ interest }) {
-  const [prepared, setPrepared] = useState(false);
+  const [status, setStatus] = useState({ type: '', message: '', reference: '' });
+  const [submitting, setSubmitting] = useState(false);
+  const [startedAt, setStartedAt] = useState(() => Date.now());
   const [data, setData] = useState({ name: '', email: '', phone: '', profile: '', interest: interest || '', goals: '', consent: false });
-  const update = e => { setPrepared(false); setData(prev => ({ ...prev, [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value })); };
-  const message = `Hello CRED! I would like to book a free consultation.
-
-Name: ${data.name}
-Email: ${data.email}
-Telephone: ${data.phone || 'Not provided'}
-Current stage: ${data.profile}
-Interested in: ${data.interest || 'Education and career guidance'}
-
-My goals: ${data.goals}`;
-  function submit(e) { e.preventDefault(); window.open(whatsappLink(message), '_blank', 'noopener,noreferrer'); setPrepared(true); }
+  const update = e => { setStatus({ type: '', message: '', reference: '' }); setData(prev => ({ ...prev, [e.target.name]: e.target.type === 'checkbox' ? e.target.checked : e.target.value })); };
+  async function submit(event) {
+    event.preventDefault();
+    setSubmitting(true);
+    setStatus({ type: '', message: '', reference: '' });
+    const form = event.currentTarget;
+    try {
+      const response = await fetch('/api/enquiries', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          ...data,
+          website: form.elements.website.value,
+          startedAt,
+          source: interest ? `website-${interest}` : 'website-contact',
+        }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || 'We could not submit your request.');
+      setStatus({ type: 'success', message: 'Thank you. Your consultation request has been received. Please check your email for confirmation.', reference: result.reference });
+      setData({ name: '', email: '', phone: '', profile: '', interest: interest || '', goals: '', consent: false });
+      setStartedAt(Date.now());
+    } catch (requestError) {
+      setStatus({ type: 'error', message: `${requestError.message} You can also contact CRED through WhatsApp.`, reference: '' });
+    } finally {
+      setSubmitting(false);
+    }
+  }
   return <><PageBanner title="Let’s build your" accent="learning pathway." description={CONTACT_DESCRIPTION} />
     <section id="page-content" className="section contact-grid"><Reveal className="contact-copy"><h2>Book a Free Consultation</h2><p>Complete this enquiry form and share a little about your goals. We will contact you to arrange an initial conversation.</p><a className="contact-phone" href={whatsappLink()} target="_blank" rel="noopener noreferrer"><Globe2 size={22} />WhatsApp: {DISPLAY_PHONE}</a><div className="contact-location"><Globe2 size={27} /><div><a href="#contact-location" onClick={e => { e.preventDefault(); document.getElementById('contact-location')?.scrollIntoView({ behavior: 'smooth' }); }}>Ajman, United Arab Emirates</a><span>View our location and map below.</span></div></div></Reveal>
-    <Reveal><form className="consultation-form" onSubmit={submit}><h3>Your consultation request</h3><div className="form-grid"><label>Full name <span>*</span><input required name="name" autoComplete="name" value={data.name} onChange={update} placeholder="Your full name" maxLength={120} /></label><label>Email address <span>*</span><input required type="email" name="email" autoComplete="email" value={data.email} onChange={update} placeholder="you@example.com" maxLength={200} /></label><label>Telephone / WhatsApp<input type="tel" name="phone" autoComplete="tel" value={data.phone} onChange={update} placeholder="Include your country code" maxLength={40} /></label><label>Where are you today? <span>*</span><select name="profile" required value={data.profile} onChange={update}><option value="">Select your current stage</option>{audiences.map(([a]) => <option key={a}>{a}</option>)}</select></label></div><label>I’m interested in<input name="interest" value={data.interest} onChange={update} placeholder="A qualification, subject or scholarship" maxLength={200} /></label><label>Tell us about your goals <span>*</span><textarea required name="goals" rows={4} value={data.goals} onChange={update} placeholder="What would you like your next qualification to help you achieve?" maxLength={4000} /></label><label className="checkbox-label"><input type="checkbox" name="consent" checked={data.consent} onChange={update} required /><span>I agree to share these details with CRED through WhatsApp to request a consultation.</span></label><button className="button submit-button" type="submit"><span>Book My Consultation</span><ArrowUpRight size={21} /></button><p className="form-notice">Your request opens in WhatsApp. Review the message and tap Send to contact CRED.</p>{prepared && <p className="form-success" role="status">Your request is ready to send in WhatsApp. <a href={whatsappLink(message)} target="_blank" rel="noopener noreferrer">Open WhatsApp again</a></p>}</form></Reveal></section><ContactLocation /></>;
+    <Reveal><form className="consultation-form" onSubmit={submit}><h3>Your consultation request</h3><div className="form-grid"><label>Full name <span>*</span><input required name="name" autoComplete="name" value={data.name} onChange={update} placeholder="Your full name" maxLength={120} /></label><label>Email address <span>*</span><input required type="email" name="email" autoComplete="email" value={data.email} onChange={update} placeholder="you@example.com" maxLength={200} /></label><label>Telephone / WhatsApp<input type="tel" name="phone" autoComplete="tel" value={data.phone} onChange={update} placeholder="Include your country code" maxLength={40} /></label><label>Where are you today? <span>*</span><select name="profile" required value={data.profile} onChange={update}><option value="">Select your current stage</option>{audiences.map(([a]) => <option key={a}>{a}</option>)}</select></label></div><label>I’m interested in<input name="interest" value={data.interest} onChange={update} placeholder="A qualification, subject or scholarship" maxLength={200} /></label><label>Tell us about your goals <span>*</span><textarea required name="goals" rows={4} value={data.goals} onChange={update} placeholder="What would you like your next qualification to help you achieve?" maxLength={4000} /></label><label className="form-honeypot" aria-hidden="true">Website<input name="website" tabIndex={-1} autoComplete="off" /></label><label className="checkbox-label"><input type="checkbox" name="consent" checked={data.consent} onChange={update} required /><span>I agree to share these details with CRED to request a consultation and receive a confirmation email.</span></label><button className="button submit-button" type="submit" disabled={submitting}><span>{submitting ? 'Sending request…' : 'Book My Consultation'}</span><ArrowUpRight size={21} /></button><p className="form-notice">Your details are sent securely to the CRED team. You will receive an acknowledgement by email.</p>{status.message && <p className={status.type === 'success' ? 'form-success' : 'form-error'} role={status.type === 'success' ? 'status' : 'alert'}>{status.message}{status.reference && <span> Reference: {status.reference}</span>}{status.type === 'error' && <> <a href={whatsappLink()} target="_blank" rel="noopener noreferrer">Open WhatsApp</a></>}</p>}</form></Reveal></section><ContactLocation /></>;
 }
 function Footer() { return <footer><div className="footer-columns"><div className="footer-about"><a href="#/home" className="footer-brand"><img src="/cred-logo.svg" alt="CRED Global Learning" /></a><p>{FOOTER_DESCRIPTION}</p></div><div><h3>Links</h3><nav className="footer-link-list" aria-label="Footer navigation">{navigation.map(([id,label]) => <a key={id} href={`#/${id}`}>{label}</a>)}</nav></div><div><h3>Contact</h3><a className="footer-contact-link" href={`tel:+${WHATSAPP_NUMBER}`}>Call {DISPLAY_PHONE}</a><a className="footer-contact-link" href={whatsappLink()} target="_blank" rel="noopener noreferrer">WhatsApp {DISPLAY_PHONE}</a><p>Ajman, United Arab Emirates</p></div></div><div className="footer-bottom"><span>© {new Date().getFullYear()} CRED Global Learning</span></div></footer>; }
 const wipeDirections = ['left', 'right', 'up', 'down'];
 function App() {
  const [headerTheme, setHeaderTheme] = useState('dark');
  const [transitionDirection, setTransitionDirection] = useState(() => wipeDirections[Math.floor(Math.random() * wipeDirections.length)]);
- const [hash, setHash] = useState(location.hash); const [menuOpen, setMenuOpen] = useState(false); const menuButton = useRef(null); const menuPanel = useRef(null); const current = hash.replace(/^#\/?/, '').split('?')[0] || 'home'; const page = navigation.some(([id]) => id === current) ? current : 'home'; const interest = new URLSearchParams(hash.split('?')[1] || '').get('interest') || '';
+ const [hash, setHash] = useState(location.hash); const [menuOpen, setMenuOpen] = useState(false); const menuButton = useRef(null); const menuPanel = useRef(null); const current = hash.replace(/^#\/?/, '').split('?')[0] || 'home'; const page = current === 'dashboard' ? 'dashboard' : navigation.some(([id]) => id === current) ? current : 'home'; const interest = new URLSearchParams(hash.split('?')[1] || '').get('interest') || '';
  useEffect(() => { const listener = () => {
    setHash(location.hash);
    setTransitionDirection(previous => {
@@ -160,7 +249,7 @@ function App() {
      return choices[Math.floor(Math.random() * choices.length)];
    });
  }; window.addEventListener('hashchange', listener); return () => window.removeEventListener('hashchange', listener); }, []);
- useEffect(() => { setMenuOpen(false); document.title = titles[page]; window.scrollTo(0, 0); }, [hash, page]);
+ useEffect(() => { setMenuOpen(false); document.title = page === 'dashboard' ? 'CRED Lead Dashboard' : titles[page]; window.scrollTo(0, 0); }, [hash, page]);
 
  useEffect(() => {
    let frame;
@@ -207,7 +296,7 @@ function App() {
    <a href="#/contact" onClick={() => setMenuOpen(false)} aria-current={page === 'contact' ? 'page' : undefined}><ArrowUpRight size={21} /><span>Let’s talk</span></a>
  </div>
  {menuOpen && <nav id="mobile-navigation" ref={menuPanel} className="mobile-nav" aria-label="Mobile navigation">{navigation.map(([id, label], i) => <a key={id} href={`#/${id}`} onClick={() => setMenuOpen(false)} aria-current={page === id ? 'page' : undefined}><span>0{i + 1}</span>{label}<ArrowUpRight size={23} /></a>)}<p>Qualifications with a career purpose.</p></nav>}
- <WhatsAppHelper route={hash} menuOpen={menuOpen} /><div className="site-shell" id="top"><main id="main-content" tabIndex={-1} key={hash}><span className="route-wipe" data-direction={transitionDirection} aria-hidden="true" /><a className="page-wordmark" href="#/home" aria-label="CRED Global Learning home"><img src="/cred-logo.svg" alt="CRED Global Learning" /></a>{page === 'home' ? <Home /> : page === 'about' ? <About /> : page === 'services' ? <Services /> : page === 'programmes' ? <Programmes /> : page === 'scholarships' ? <Scholarships /> : page === 'blog' ? <Blog /> : <Contact interest={interest} />}</main><Footer /></div></>;
+ {page !== 'dashboard' && <WhatsAppHelper route={hash} menuOpen={menuOpen} />}<div className="site-shell" id="top"><main id="main-content" tabIndex={-1} key={hash}><span className="route-wipe" data-direction={transitionDirection} aria-hidden="true" /><a className="page-wordmark" href="#/home" aria-label="CRED Global Learning home"><img src="/cred-logo.svg" alt="CRED Global Learning" /></a>{page === 'home' ? <Home /> : page === 'about' ? <About /> : page === 'services' ? <Services /> : page === 'programmes' ? <Programmes /> : page === 'scholarships' ? <Scholarships /> : page === 'blog' ? <Blog /> : page === 'dashboard' ? <LeadDashboard /> : <Contact interest={interest} />}</main>{page !== 'dashboard' && <Footer />}</div></>;
 
 }
 createRoot(document.getElementById('root')).render(<App />);

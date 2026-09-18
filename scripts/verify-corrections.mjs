@@ -33,10 +33,9 @@ try {
   assert.equal(href.pathname, '/971508532770');
   assert.match(href.searchParams.get('text'), /free consultation/);
   await page.evaluate(() => window.scrollBy({ top: 250, behavior: 'instant' }));
-  await page.waitForTimeout(200);
   assert.equal(await helper.getAttribute('aria-hidden'), 'true');
-  assert.equal(await helper.evaluate(e => getComputedStyle(e).visibility), 'hidden');
-  await page.waitForTimeout(900);
+  await helper.waitFor({ state: 'hidden' });
+  await helper.waitFor({ state: 'visible' });
   assert.equal(await helper.getAttribute('aria-hidden'), 'false');
   results.push('WhatsApp target and prefill; helper hides during scrolling and returns after idle');
   for (const width of [1282, 1024, 768, 390, 320]) {
@@ -46,6 +45,7 @@ try {
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${width}px ${name}: horizontal overflow`);
       assert.equal(await page.locator('h1').count(), 1);
       assert.equal(await page.locator('.page-banner .eyebrow').count(), 0);
+      await helper.waitFor({ state: 'visible' });
       assert(await helper.isVisible());
       if (name === 'contact') assert(await page.getByRole('heading', { name: 'Book a Free Consultation', exact: true }).isVisible());
     }
@@ -74,15 +74,22 @@ try {
   await page.getByLabel('Where are you today?').selectOption('Working professionals');
   await page.getByLabel('Tell us about your goals').fill('Explore flexible education & career progression.');
   await page.getByRole('checkbox').check();
-  await page.evaluate(() => { window.open = url => { window.__preparedWhatsAppUrl = url; return null; }; });
+  let submittedEnquiry;
+  await page.route('**/api/enquiries', async route => {
+    submittedEnquiry = route.request().postDataJSON();
+    await route.fulfill({
+      status: 202,
+      contentType: 'application/json',
+      body: JSON.stringify({ ok: true, reference: '11111111-1111-4111-8111-111111111111' }),
+    });
+  });
   await page.locator('button[type="submit"]').click();
-  const prepared = new URL(await page.evaluate(() => window.__preparedWhatsAppUrl));
-  assert.equal(prepared.pathname, '/971508532770');
-  assert.match(prepared.searchParams.get('text'), /QA Learner/);
-  assert.match(prepared.searchParams.get('text'), /Artificial Intelligence/);
-  assert.match(prepared.searchParams.get('text'), /education & career/);
-  assert.match(await page.getByRole('status').innerText(), /ready to send/);
-  results.push('Mobile navigation, dock clearance, programme filters and WhatsApp form prefill (no message sent)');
+  await page.getByRole('status').waitFor();
+  assert.equal(submittedEnquiry.name, 'QA Learner');
+  assert.equal(submittedEnquiry.interest, 'Artificial Intelligence');
+  assert.match(submittedEnquiry.goals, /education & career/);
+  assert.match(await page.getByRole('status').innerText(), /request has been received/);
+  results.push('Mobile navigation, dock clearance, programme filters and enquiry submission handoff');
   await route('blog');
   await page.getByRole('link', { name: 'Read more', exact: true }).first().click();
   assert.match(page.url(), /article=11/);

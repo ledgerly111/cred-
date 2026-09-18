@@ -46,7 +46,7 @@ Content is adapted from `CRED_Global_Learning_Website_Content (1).docx`. Editori
 Items intentionally awaiting confirmed business information:
 
 - Official email, full address and office hours. The supplied city and country are shown. The client-provided telephone and WhatsApp number is 050 853 2770.
-- Optional CRM/email integration. The consultation form validates fields and opens WhatsApp with the enquiry prefilled for 050 853 2770. The student reviews the message and presses Send; the website does not claim delivery or store personal information. A fallback link lets the student reopen WhatsApp.
+- The consultation form includes a Cloudflare Pages Functions backend, D1 lead storage, Gmail API notifications, automatic student acknowledgements, spam controls and a private lead dashboard. Production activation instructions are in `FORM_BACKEND_SETUP.md`. WhatsApp remains available as a fallback contact channel.
 - Corporate scholarship terms: the document mentions a 25% discount but provides no eligibility or partner details. The site invites confirmation with an advisor instead of advertising an unverified fixed discount.
 - Approved Privacy Policy and Terms content, newsletter delivery, and verified social account URLs. No fabricated legal policies, subscription confirmations or dead social links are included.
 

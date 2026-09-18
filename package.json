@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
     "test": "node scripts/verify-corrections.mjs",
+    "test:enquiries": "node scripts/verify-enquiry-api.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
