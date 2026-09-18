@@ -4,7 +4,7 @@ const JSON_HEADERS = {
   'x-content-type-options': 'nosniff',
 };
 
-const TRUSTED_SITE_HOSTS = new Set(['crededu.com', 'www.crededu.com']);
+const TRUSTED_SITE_HOSTS = new Set(['crededu.com', 'www.crededu.com', 'site.crededu.com']);
 
 export function json(data, status = 200, headers = {}) {
   return new Response(JSON.stringify(data), {
@@ -30,7 +30,7 @@ export function requireSameOrigin(request) {
     // browser correctly reports crededu.com as its origin.
     return originUrl.protocol === 'https:'
       && TRUSTED_SITE_HOSTS.has(originUrl.hostname)
-      && requestUrl.hostname.endsWith('.pages.dev');
+      && (TRUSTED_SITE_HOSTS.has(requestUrl.hostname) || requestUrl.hostname.endsWith('.pages.dev'));
   } catch {
     return false;
   }
