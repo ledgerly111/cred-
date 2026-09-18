@@ -24,7 +24,7 @@ stores the submission              sends two messages
              Reply-To = student email                Reply-To = info@crededu.com
 ```
 
-The public site is `https://crededu.com`. The Cloudflare Pages deployment is backed by the `cred-eck` Pages project, and the public domain is routed to it through the `cred-hostinger-router` Cloudflare Worker. GitHub `main` is the production source branch.
+The public site is `https://crededu.com`. The Cloudflare Pages project is named `cred` and its Pages domain is `cred-eck.pages.dev`. The public domain is routed to it through the `cred-hostinger-router` Cloudflare Worker. GitHub `main` is the production source branch.
 
 Google Workspace hosts the mailbox. Cloudflare runs the website endpoint and D1 database. The website does **not** store Diana's Google password and does **not** use SMTP. It obtains a short-lived Gmail API access token using a Google OAuth refresh token kept as an encrypted Cloudflare secret.
 
