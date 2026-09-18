@@ -4,6 +4,8 @@ const JSON_HEADERS = {
   'x-content-type-options': 'nosniff',
 };
 
+const TRUSTED_SITE_HOSTS = new Set(['crededu.com', 'www.crededu.com']);
+
 export function json(data, status = 200, headers = {}) {
   return new Response(JSON.stringify(data), {
     status,
@@ -19,7 +21,16 @@ export function requireSameOrigin(request) {
   const origin = request.headers.get('origin');
   if (!origin) return false;
   try {
-    return new URL(origin).host === new URL(request.url).host;
+    const originUrl = new URL(origin);
+    const requestUrl = new URL(request.url);
+    if (originUrl.host === requestUrl.host) return true;
+
+    // The public domain is routed to the Pages deployment by a Cloudflare
+    // Worker, so the Function can see the internal pages.dev host while the
+    // browser correctly reports crededu.com as its origin.
+    return originUrl.protocol === 'https:'
+      && TRUSTED_SITE_HOSTS.has(originUrl.hostname)
+      && requestUrl.hostname.endsWith('.pages.dev');
   } catch {
     return false;
   }
