@@ -12,7 +12,7 @@ const errors = [];
 page.on('pageerror', e => errors.push(e.message));
 const results = [];
 const base = process.env.TEST_URL || 'http://localhost:5173';
-async function route(name) { await page.goto(`${base}/#/${name}`); await page.locator('h1').waitFor(); await page.waitForTimeout(1000); }
+async function route(name) { await page.goto(`${base}/${name}`); await page.locator('h1').waitFor(); await page.waitForTimeout(1000); }
 try {
   await route('home');
   assert.equal(await page.locator('.quick-card').count(), 4);
@@ -33,8 +33,8 @@ try {
   assert.equal(href.pathname, '/971508532770');
   assert.match(href.searchParams.get('text'), /free consultation/);
   await page.evaluate(() => window.scrollBy({ top: 250, behavior: 'instant' }));
-  assert.equal(await helper.getAttribute('aria-hidden'), 'true');
   await helper.waitFor({ state: 'hidden' });
+  assert.equal(await helper.getAttribute('aria-hidden'), 'true');
   await helper.waitFor({ state: 'visible' });
   assert.equal(await helper.getAttribute('aria-hidden'), 'false');
   results.push('WhatsApp target and prefill; helper hides during scrolling and returns after idle');

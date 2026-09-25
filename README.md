@@ -9,7 +9,7 @@ npm install
 npm run dev
 ```
 
-Open the local URL printed by Vite. `npm run build` creates the production site in `dist`; `npm run preview` previews it. Hash routes work on static hosting without server rewrites.
+Open the local URL printed by Vite. `npm run build` creates the production site in `dist`; `npm run preview` previews it. Pages use clean URLs such as `/contact`; Cloudflare Pages serves direct visits to these routes through its SPA fallback. Existing `/#/contact` bookmarks are converted to `/contact` in the browser.
 
 ## Included
 

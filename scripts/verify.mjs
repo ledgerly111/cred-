@@ -14,7 +14,7 @@ const errors = [];
 page.on('pageerror', e => errors.push(e.message));
 const base = process.env.TEST_URL || 'http://localhost:5173';
 const results = [];
-async function route(name) { await page.goto(`${base}/#/${name}`); await page.locator('h1').waitFor(); await page.waitForTimeout(850); }
+async function route(name) { await page.goto(`${base}/${name}`); await page.locator('h1').waitFor(); await page.waitForTimeout(850); }
 async function noOverflow(label) { assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${label}: horizontal overflow`); results.push(`${label}: no horizontal overflow`); }
 try {
   await route('home');

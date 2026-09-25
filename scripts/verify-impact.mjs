@@ -13,7 +13,7 @@ try {
   for(const width of [1282,390,320]) {
     await page.setViewportSize({width,height:900});
     for(const route of ['home','about']) {
-      await page.goto(`${base}/#/${route}`);
+      await page.goto(`${base}/${route}`);
       await page.locator('.impact-cards').scrollIntoViewIfNeeded();
       await page.waitForTimeout(2500);
       assert.equal(await page.locator('.impact-tile').count(),5);
@@ -33,11 +33,11 @@ try {
   }
   const numbers=new Set();
   for(const route of ['home','about','services','programmes','scholarships','blog']) {
-    await page.goto(`${base}/#/${route}`);await page.locator('h1').waitFor();
+    await page.goto(`${base}/${route}`);await page.locator('h1').waitFor();
     for(const n of await page.locator('.placeholder-number').allTextContents())numbers.add(Number(n));
   }
   assert.deepEqual([...numbers].sort((a,b)=>a-b),Array.from({length:17},(_,i)=>i+1));
-  await page.emulateMedia({reducedMotion:'reduce'});await page.goto(`${base}/#/about`);
+  await page.emulateMedia({reducedMotion:'reduce'});await page.goto(`${base}/about`);
   await page.locator('.impact-cards').scrollIntoViewIfNeeded();await page.waitForTimeout(200);
   assert.equal(await page.locator('.impact-tile').first().evaluate(e=>getComputedStyle(e).transitionDuration),'0s');
   assert.deepEqual(errors,[]);

@@ -10,7 +10,7 @@ The repository now contains the complete website-side implementation. Production
 - The student receives an automatic acknowledgement from `info@crededu.com`.
 - Failed email attempts remain visible in the dashboard with `email_status = failed`; the lead is not lost.
 - Spam controls include same-origin enforcement, strict field limits, a honeypot, minimum completion time, hashed-IP rate limiting and dashboard login throttling.
-- The private lead dashboard is available at `/#/dashboard` after activation.
+- The private lead dashboard is available at `/dashboard` after activation.
 
 ## 1. Create and migrate the D1 database
 
@@ -67,7 +67,7 @@ Redeploy the Pages project after adding the D1 binding and secrets.
 
 1. Submit one genuine test enquiry from the live website.
 2. Confirm that the browser shows a reference number.
-3. Confirm the lead appears at `https://crededu.com/#/dashboard`.
+3. Confirm the lead appears at `https://crededu.com/dashboard`.
 4. Confirm `info@crededu.com` receives the lead notification.
 5. Confirm the test student's inbox receives the acknowledgement.
 6. Reply to the notification and confirm the reply is addressed to the student.

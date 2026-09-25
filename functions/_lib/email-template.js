@@ -73,7 +73,7 @@ export function studentAcknowledgementHtml({ name, referenceNumber }) {
                 <table role="presentation" cellspacing="0" cellpadding="0" border="0">
                   <tr>
                     <td style="background:#fa7857;">
-                      <a href="https://crededu.com/#/home" style="display:inline-block;padding:15px 22px;color:#37121e;font-size:14px;line-height:18px;font-weight:bold;text-decoration:none;">Explore CRED&nbsp;&nbsp;↗</a>
+                      <a href="https://crededu.com/" style="display:inline-block;padding:15px 22px;color:#37121e;font-size:14px;line-height:18px;font-weight:bold;text-decoration:none;">Explore CRED&nbsp;&nbsp;↗</a>
                     </td>
                   </tr>
                 </table>

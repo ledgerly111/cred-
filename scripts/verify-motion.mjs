@@ -5,7 +5,7 @@ const {chromium}=require('C:/Users/user/.cache/codex-runtimes/codex-primary-runt
 const browser=await chromium.launch({channel:'chrome',headless:true});
 const page=await browser.newPage({viewport:{width:1282,height:800}});
 const errors=[];page.on('pageerror',e=>errors.push(e.message));
-await page.goto('http://localhost:5173/#/home');
+await page.goto('http://localhost:5173/home');
 await page.waitForTimeout(1600);
 assert.equal(await page.locator('.rail-mark').innerText(),'');
 assert(await page.locator('.rail-mark img').evaluate(i=>i.complete && i.naturalWidth>0));

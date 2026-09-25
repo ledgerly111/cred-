@@ -11,21 +11,21 @@ const errors=[];page.on('pageerror',e=>errors.push(e.message));
 const base=process.env.TEST_URL || 'http://localhost:5180';
 try {
   for(const route of ['home','blog']) {
-    await page.goto(`${base}/#/${route}`);
+    await page.goto(`${base}/${route}`);
     await page.locator('.blog-card').first().waitFor({state:'attached'});
     assert.equal(await page.locator('.blog-card').count(),8);
     assert.deepEqual(await page.locator('.blog-card h3').allTextContents(),blogArticles.map(a=>a.title));
     assert.deepEqual(await page.locator('.blog-card-copy p').allTextContents(),blogArticles.map(a=>a.excerpt));
   }
   for(const article of blogArticles) {
-    await page.goto(`${base}/#/blog?article=${article.id}`);
+    await page.goto(`${base}/blog?article=${article.id}`);
     await page.locator('.article-body').waitFor();
     assert.equal(await page.locator('h1').innerText(),article.title);
     const body=await page.locator('.article-body').textContent();
     for(const block of article.blocks) for(const text of block.type==='list'?block.items:[block.text]) assert(body.includes(text));
     assert.deepEqual(await page.locator('.article-sources a').evaluateAll(nodes=>nodes.map(n=>n.href)),article.sources.map(s=>s.url));
   }
-  await page.goto(`${base}/#/contact`);
+  await page.goto(`${base}/contact`);
   await page.locator('.contact-world').scrollIntoViewIfNeeded();
   await page.waitForTimeout(2500);
   const canvas=page.locator('.globe-canvas');
@@ -54,7 +54,7 @@ try {
   for(const width of [390,320]) {
     await page.setViewportSize({width,height:844});
     for(const route of ['home','blog','blog?article=11','contact']) {
-      await page.goto(`${base}/#/${route}`);await page.locator('h1').waitFor();await page.waitForTimeout(500);
+      await page.goto(`${base}/${route}`);await page.locator('h1').waitFor();await page.waitForTimeout(500);
       assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`${route} overflow at ${width}`);
     }
     await page.locator('.contact-world').scrollIntoViewIfNeeded();await page.waitForTimeout(1000);
@@ -62,7 +62,7 @@ try {
     await page.screenshot({path:`qa/launch-contact-${width}.png`});
   }
   await page.emulateMedia({reducedMotion:'reduce'});
-  await page.goto(`${base}/#/contact`);await page.locator('.contact-world').scrollIntoViewIfNeeded();await page.waitForTimeout(1500);
+  await page.goto(`${base}/contact`);await page.locator('.contact-world').scrollIntoViewIfNeeded();await page.waitForTimeout(1500);
   assert(!(await page.locator('.globe-pause').isVisible()));
   const still=await canvas.screenshot();await page.waitForTimeout(400);assert(still.equals(await canvas.screenshot()),'Reduced motion globe stays still');
   assert.deepEqual(errors,[]);

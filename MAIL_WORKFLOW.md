@@ -86,7 +86,7 @@ https://www.googleapis.com/auth/gmail.send
 Open:
 
 ```text
-https://crededu.com/#/dashboard
+https://crededu.com/dashboard
 ```
 
 The dashboard reads leads from D1 after password authentication. Its password is the value of the encrypted `DASHBOARD_PASSWORD` secret. Do not put that password in this file, an issue, or a commit.
@@ -118,10 +118,10 @@ Vite alone does not emulate the production Pages Function or D1 binding. Use pro
 
 Use a real address controlled by the tester. Do not use a fake address because repeated bounces can damage sender reputation.
 
-1. Open `https://crededu.com/#/contact`.
+1. Open `https://crededu.com/contact`.
 2. Submit a clearly labelled test enquiry.
 3. Record the reference displayed by the website.
-4. Confirm the row appears in `https://crededu.com/#/dashboard`.
+4. Confirm the row appears in `https://crededu.com/dashboard`.
 5. Confirm `info@crededu.com` receives `New CRED website enquiry — <name>`.
 6. Confirm the test student's mailbox receives `We received your CRED consultation request`.
 7. Open the internal notification and verify that Reply directs a response to the student's address.
@@ -143,10 +143,11 @@ That historical test predates the short-reference migration. New submissions dis
 
 ### A reference appears, but no email arrives
 
-The lead was probably stored successfully and email delivery failed afterward.
+The lead was probably stored successfully and email delivery failed afterward. `email_status = sent` means Gmail accepted the send request; it does not prove that the recipient's mailbox accepted the message. A later bounce, including a full mailbox, appears in the sending Workspace mailbox and Google email logs.
 
 - Check the lead's `email_status` in the dashboard or D1.
 - Check Gmail Spam and All Mail.
+- Check the sending Workspace mailbox for a delivery-failure notice. If the bounce says the recipient is out of storage, ask that recipient to clear space or provide a working address; changing the website's Cloudflare account will not fix their mailbox.
 - Check Google Admin Console email logs.
 - Check Cloudflare Pages Function logs for `enquiry_email_failed` and the lead ID.
 - Confirm all five mail-related secrets still exist and are spelled exactly as shown above.
