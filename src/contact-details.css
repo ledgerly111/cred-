@@ -1,0 +1,10 @@
+.contact-details { display: grid; gap: 0; margin-top: 28px; font-style: normal; }
+.contact-details > a { display: flex; align-items: flex-start; gap: 16px; padding: 17px 0; border-bottom: 1px solid var(--line); font-size: 17px; line-height: 1.6; }
+.contact-details > a > svg { width: 21px; height: 21px; flex: 0 0 21px; margin-top: 3px; }
+.contact-details > a > span { min-width: 0; overflow-wrap: anywhere; }
+.contact-address-line { display: block; }
+.contact-details > a:hover { color: var(--burgundy); }
+.contact-details-footer { margin-top: 0; }
+.contact-details-footer > a { padding: 10px 0; border: 0; font-size: 16px; }
+.contact-details-footer > a:hover { color: var(--coral); }
+@media (max-width: 600px) { .contact-details > a { font-size: 16px; gap: 13px; } }
